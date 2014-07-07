@@ -494,6 +494,7 @@ namespace KeySAV2
         // SAV
         private byte[] fetchpkx(byte[] input, byte[] keystream, int pkxoffset, int key1off, int key2off, byte[] blank)
         {
+            // Auto updates the keystream when it dumps important data!
             ghost = true;
             byte[] ekx = new Byte[232];
             byte[] key1 = new Byte[232]; Array.Copy(keystream, key1off, key1, 0, 232);
@@ -713,7 +714,6 @@ namespace KeySAV2
             else
             {
                 // Slot Decryption error?!
-                File.WriteAllBytes("C:\\Users\\Kurt\\Desktop\\wtf.bin", pkx);
                 return null;
             }
         }

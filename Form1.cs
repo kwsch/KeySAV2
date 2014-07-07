@@ -73,6 +73,7 @@ namespace KeySAV2
         public System.Timers.Timer myTimer = new System.Timers.Timer();
         public static string path_exe = System.Windows.Forms.Application.StartupPath;
         public static string datapath = path_exe + "\\data";
+        public static string dbpath = path_exe + "\\db";
         public string path_3DS = "";
         public string path_POW = "";
 
@@ -135,6 +136,10 @@ namespace KeySAV2
                 if (!Directory.Exists(datapath)) // Create data path if it doesn't exist.
                 {
                     DirectoryInfo di = Directory.CreateDirectory(datapath);
+                }
+                if (!Directory.Exists(dbpath)) // Create db path if it doesn't exist.
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(dbpath);
                 }
             
                 // Load .ini data.
@@ -805,8 +810,17 @@ namespace KeySAV2
             }
             if (CB_ExportStyle.SelectedIndex == 7)
             {
-                string filename = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
-                File.WriteAllBytes(datapath + "\\" + CleanFileName(filename) + ".pk6", pkx);
+                string isshiny = "";
+                {   // Is Shiny
+                    isshiny = " ★";
+                }
+
+                string savedname =
+                    data.species.ToString("000") + isshiny + " - " 
+                    + data.nicknamestr + " - "
+                    + data.chk.ToString("X4") + data.EC.ToString("X8")
+                    + ".pk6";
+                File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
@@ -983,8 +997,17 @@ namespace KeySAV2
             }
             if (CB_ExportStyle.SelectedIndex == 7)
             {
-                string filename = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
-                File.WriteAllBytes(datapath + "\\" + CleanFileName(filename) + ".pk6", pkx);
+                string isshiny = "";
+                {   // Is Shiny
+                    isshiny = " ★";
+                }
+
+                string savedname =
+                    data.species.ToString("000") + isshiny + " - "
+                    + data.nicknamestr + " - "
+                    + data.chk.ToString("X4") + data.EC.ToString("X8")
+                    + ".pk6";
+                File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
@@ -1940,6 +1963,7 @@ namespace KeySAV2
                     move1_pp, move2_pp, move3_pp, move4_pp,
                     move1_ppu, move2_ppu, move3_ppu, move4_ppu,
                     eggmove1, eggmove2, eggmove3, eggmove4,
+                    chk,
 
                     OTfriendship, OTaffection,
                     egg_year, egg_month, egg_day,
@@ -1954,6 +1978,7 @@ namespace KeySAV2
                     notOT = "";
                     ot = "";
                     EC = BitConverter.ToUInt32(pkx, 0);
+                    chk = BitConverter.ToUInt16(pkx, 6);
                     species = BitConverter.ToUInt16(pkx, 0x08);
                     helditem = BitConverter.ToUInt16(pkx, 0x0A);
                     TID = BitConverter.ToUInt16(pkx, 0x0C);

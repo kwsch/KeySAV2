@@ -18,6 +18,8 @@ namespace KeySAV2
     {
         public Form1()
         {
+            FileSystemWatcher fsw = new FileSystemWatcher();
+            fsw.SynchronizingObject = this; // Timer Threading Related fix to cross-access control.
             InitializeComponent();
             myTimer.Elapsed += new ElapsedEventHandler(DisplayTimeEvent);
             this.tab_Main.AllowDrop = true;
@@ -26,7 +28,7 @@ namespace KeySAV2
             tab_Main.DragEnter += new DragEventHandler(tabMain_DragEnter);
             tab_Main.DragDrop += new DragEventHandler(tabMain_DragDrop);
 
-            myTimer.Interval = 3000; // milliseconds per trigger interval
+            myTimer.Interval = 100; // milliseconds per trigger interval
             myTimer.Start();
             CB_Game.SelectedIndex = 0;
             CB_MainLanguage.SelectedIndex = 0;
@@ -382,7 +384,14 @@ namespace KeySAV2
             {
                 MessageBox.Show("Incorrect File Size"); return;
             }
-            TB_SAV.Text = path;
+            if (TB_SAV.InvokeRequired)
+            {
+                TB_SAV.Invoke(new MethodInvoker(delegate { TB_SAV.Text = path; }));
+            }
+            else 
+            {
+                TB_SAV.Text = path;
+            }
 
             // Go ahead and load the save file into RAM...
             byte[] input = File.ReadAllBytes(path);
@@ -427,6 +436,8 @@ namespace KeySAV2
             Array.Resize(ref empty, 0xE8);
             scanSAV(savefile, key, empty);
             File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
+            CB_BoxStart.SelectedIndex = 1; // Select Box 1 instead of All... for simplicity's sake.
+            // changeboxsetting(null, null);
         }
         private void openVID(string path)
         {
@@ -545,7 +556,7 @@ namespace KeySAV2
                         else
                         {
                             // Data is invalid; slot was occupied at break and is occupied with something else.
-                            return null;
+                            return null; // Not a failed decryption; we just haven't seen new data here yet.
                         }
                     }
                 }
@@ -553,7 +564,7 @@ namespace KeySAV2
             else
             {
                 // We've dumped data at least once.
-                if (key1.SequenceEqual(encrypteddata))
+                if (key1.SequenceEqual(encrypteddata) || key1.SequenceEqual(xortwos(encrypteddata,blank)) || key1.SequenceEqual(xortwos(encrypteddata,ezeros)))
                 {
                     // Data is back to break state, but we can still dump with the other key.
                     ekx = xortwos(key2, encrypteddata);
@@ -578,7 +589,7 @@ namespace KeySAV2
                         }
                     }
                 }
-                else if (key2.SequenceEqual(encrypteddata))
+                else if (key2.SequenceEqual(encrypteddata) || key2.SequenceEqual(xortwos(encrypteddata, blank)) || key2.SequenceEqual(xortwos(encrypteddata, ezeros)))
                 {
                     // Data is changed only once to a dumpable, but we can still dump with the other key.
                     ekx = xortwos(key1, encrypteddata); 
@@ -591,11 +602,8 @@ namespace KeySAV2
                         }
                         else if (verifyCHK(decryptArray(xortwos(ekx, ezeros))))
                         {
-                            // Key2 decrypts our data after we remove encrypted zeros.
-                            // Copy Key1 to Key2, then zero out Key1.
                             ekx = xortwos(ekx, ezeros);
-                            Array.Copy(xortwos(ezeros, key1), 0, keystream, key2off, 232);
-                            Array.Copy(zeros, 0, keystream, key1off, 232);
+                            Array.Copy(xortwos(key1, ezeros), 0, keystream, key1off, 232);
                         }
                         else
                         {
@@ -696,7 +704,7 @@ namespace KeySAV2
                         }
                         else if (verifyCHK(decryptArray(xortwos(data2, blank))))
                         {
-                            xortwos(data2, blank);
+                            ekx = xortwos(data2, blank);
                             Array.Copy(xortwos(key2, blank), 0, keystream, key2off, 232);
                             Array.Copy(zeros, 0, keystream, key1off, 232);
                         }
@@ -1650,8 +1658,8 @@ namespace KeySAV2
 
                 if (Directory.Exists(savpath))
                 {
-                    if (File.Exists(savpath + "000000000.sav"))
-                        openVID(savpath + "000000000.sav");
+                    if (File.Exists(savpath + "00000001.sav"))
+                        openSAV(savpath + "00000001.sav");
                 }
                 // Fetch the latest video
                 if (Directory.Exists(vidpath))
@@ -1659,7 +1667,10 @@ namespace KeySAV2
                     try
                     {
                         FileInfo BV = GetNewestFile(new DirectoryInfo(vidpath));
-                        openVID(BV.FullName);
+                        if (BV.Length == 28256)
+                        {
+                            openVID(BV.FullName);
+                        }
                     }
                     catch { }
                 }
@@ -1695,7 +1706,7 @@ namespace KeySAV2
                     DirectoryInfo di = new DirectoryInfo(folders[i]);
                     if (di.Name == "title" || di.Name == "extdata")
                     {
-                        path_3DS = di.ToString();
+                        path_3DS = di.Parent.FullName.ToString();
                         myTimer.Stop();
                         detectMostRecent();
                         pathfound = true;

@@ -364,11 +364,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(228, 69);
+            this.label1.Location = new System.Drawing.Point(211, 70);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 35;
-            this.label1.Text = "<100% data";
+            this.label1.Text = "<100% data ~";
             // 
             // CHK_R_Table
             // 
@@ -413,6 +413,8 @@
             // CHK_ShowFirst
             // 
             this.CHK_ShowFirst.AutoSize = true;
+            this.CHK_ShowFirst.Checked = true;
+            this.CHK_ShowFirst.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CHK_ShowFirst.Location = new System.Drawing.Point(214, 54);
             this.CHK_ShowFirst.Name = "CHK_ShowFirst";
             this.CHK_ShowFirst.Size = new System.Drawing.Size(75, 17);

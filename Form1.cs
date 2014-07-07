@@ -811,15 +811,15 @@ namespace KeySAV2
             if (CB_ExportStyle.SelectedIndex == 7)
             {
                 string isshiny = "";
-                {   // Is Shiny
+                if (data.isshiny)
                     isshiny = " ★";
-                }
+                if (data.isnick)
+                    data.nicknamestr += String.Format(" ({0})", specieslist[data.species]);
 
                 string savedname =
-                    data.species.ToString("000") + isshiny + " - " 
+                    data.species.ToString("000") + isshiny + " - "
                     + data.nicknamestr + " - "
-                    + data.chk.ToString("X4") + data.EC.ToString("X8")
-                    + ".pk6";
+                    + data.chk.ToString("X4") + data.EC.ToString("X8");
                 File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
@@ -998,15 +998,14 @@ namespace KeySAV2
             if (CB_ExportStyle.SelectedIndex == 7)
             {
                 string isshiny = "";
-                {   // Is Shiny
+                if (data.isshiny)
                     isshiny = " ★";
-                }
-
+                if (data.isnick) 
+                    data.nicknamestr += String.Format(" ({0})",specieslist[data.species]);
                 string savedname =
                     data.species.ToString("000") + isshiny + " - "
                     + data.nicknamestr + " - "
-                    + data.chk.ToString("X4") + data.EC.ToString("X8")
-                    + ".pk6";
+                    + data.chk.ToString("X4") + data.EC.ToString("X8");
                 File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
@@ -1955,7 +1954,7 @@ namespace KeySAV2
                     metlevel, otgender;
 
                 public bool
-                    isegg, isnick;
+                    isegg, isnick, isshiny;
 
                 public ushort
                     species, helditem, TID, SID, TSV, ESV,
@@ -2085,6 +2084,8 @@ namespace KeySAV2
 
                     TSV = (ushort)((TID ^ SID) >> 4);
                     ESV = (ushort)(((PID >> 16) ^ (PID & 0xFFFF)) >> 4);
+
+                    isshiny = (TSV == ESV);
                 }
             }
         }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tab_Main = new System.Windows.Forms.TabControl();
             this.Tab_BV = new System.Windows.Forms.TabPage();
             this.L_KeyBV = new System.Windows.Forms.Label();
@@ -49,10 +50,13 @@
             this.B_OpenSAV = new System.Windows.Forms.Button();
             this.TB_SAV = new System.Windows.Forms.TextBox();
             this.Tab_Options = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CHK_R_Table = new System.Windows.Forms.CheckBox();
+            this.CHK_ColorBox = new System.Windows.Forms.CheckBox();
+            this.CB_BoxColor = new System.Windows.Forms.ComboBox();
             this.CHK_ShowFirst = new System.Windows.Forms.CheckBox();
-            this.GB_Compat = new System.Windows.Forms.GroupBox();
-            this.L_AddEmpty = new System.Windows.Forms.Label();
-            this.B_Compat = new System.Windows.Forms.Button();
+            this.CHK_Split = new System.Windows.Forms.CheckBox();
+            this.CHK_BoldIVs = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.B_Break = new System.Windows.Forms.Button();
             this.B_File2 = new System.Windows.Forms.Button();
@@ -65,17 +69,10 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
-            this.CHK_BoldIVs = new System.Windows.Forms.CheckBox();
-            this.CHK_Split = new System.Windows.Forms.CheckBox();
-            this.CB_BoxColor = new System.Windows.Forms.ComboBox();
-            this.CHK_ColorBox = new System.Windows.Forms.CheckBox();
-            this.CHK_R_Table = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
             this.Tab_Options.SuspendLayout();
-            this.GB_Compat.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -150,6 +147,7 @@
             this.B_GoBV.TabIndex = 15;
             this.B_GoBV.Text = "Go";
             this.B_GoBV.UseVisualStyleBackColor = true;
+            this.B_GoBV.Click += new System.EventHandler(this.goDumpBV);
             // 
             // B_OpenVideo
             // 
@@ -351,7 +349,6 @@
             this.Tab_Options.Controls.Add(this.CHK_ShowFirst);
             this.Tab_Options.Controls.Add(this.CHK_Split);
             this.Tab_Options.Controls.Add(this.CHK_BoldIVs);
-            this.Tab_Options.Controls.Add(this.GB_Compat);
             this.Tab_Options.Controls.Add(this.groupBox1);
             this.Tab_Options.Controls.Add(this.B_ShowOptions);
             this.Tab_Options.Controls.Add(this.L_ExportStyle);
@@ -364,6 +361,55 @@
             this.Tab_Options.Text = "Options";
             this.Tab_Options.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(228, 69);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 35;
+            this.label1.Text = "<100% data";
+            // 
+            // CHK_R_Table
+            // 
+            this.CHK_R_Table.AutoSize = true;
+            this.CHK_R_Table.Location = new System.Drawing.Point(128, 31);
+            this.CHK_R_Table.Name = "CHK_R_Table";
+            this.CHK_R_Table.Size = new System.Drawing.Size(70, 17);
+            this.CHK_R_Table.TabIndex = 34;
+            this.CHK_R_Table.Text = "[R] Table";
+            this.CHK_R_Table.UseVisualStyleBackColor = true;
+            this.CHK_R_Table.Visible = false;
+            this.CHK_R_Table.CheckedChanged += new System.EventHandler(this.changeTableStatus);
+            // 
+            // CHK_ColorBox
+            // 
+            this.CHK_ColorBox.AutoSize = true;
+            this.CHK_ColorBox.Checked = true;
+            this.CHK_ColorBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CHK_ColorBox.Location = new System.Drawing.Point(17, 77);
+            this.CHK_ColorBox.Name = "CHK_ColorBox";
+            this.CHK_ColorBox.Size = new System.Drawing.Size(99, 17);
+            this.CHK_ColorBox.TabIndex = 33;
+            this.CHK_ColorBox.Text = "[R] Color Boxes";
+            this.CHK_ColorBox.UseVisualStyleBackColor = true;
+            // 
+            // CB_BoxColor
+            // 
+            this.CB_BoxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CB_BoxColor.FormattingEnabled = true;
+            this.CB_BoxColor.Items.AddRange(new object[] {
+            "Cycle",
+            "Default",
+            "Blue",
+            "Green",
+            "Yellow",
+            "Red"});
+            this.CB_BoxColor.Location = new System.Drawing.Point(122, 74);
+            this.CB_BoxColor.Name = "CB_BoxColor";
+            this.CB_BoxColor.Size = new System.Drawing.Size(80, 21);
+            this.CB_BoxColor.TabIndex = 32;
+            // 
             // CHK_ShowFirst
             // 
             this.CHK_ShowFirst.AutoSize = true;
@@ -374,37 +420,27 @@
             this.CHK_ShowFirst.Text = "Mark New";
             this.CHK_ShowFirst.UseVisualStyleBackColor = true;
             // 
-            // GB_Compat
+            // CHK_Split
             // 
-            this.GB_Compat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.GB_Compat.Controls.Add(this.L_AddEmpty);
-            this.GB_Compat.Controls.Add(this.B_Compat);
-            this.GB_Compat.Location = new System.Drawing.Point(0, 248);
-            this.GB_Compat.Name = "GB_Compat";
-            this.GB_Compat.Size = new System.Drawing.Size(290, 40);
-            this.GB_Compat.TabIndex = 28;
-            this.GB_Compat.TabStop = false;
-            this.GB_Compat.Text = "Old Convention Converter";
+            this.CHK_Split.AutoSize = true;
+            this.CHK_Split.Location = new System.Drawing.Point(17, 31);
+            this.CHK_Split.Name = "CHK_Split";
+            this.CHK_Split.Size = new System.Drawing.Size(78, 17);
+            this.CHK_Split.TabIndex = 31;
+            this.CHK_Split.Text = "Split Boxes";
+            this.CHK_Split.UseVisualStyleBackColor = true;
             // 
-            // L_AddEmpty
+            // CHK_BoldIVs
             // 
-            this.L_AddEmpty.AutoSize = true;
-            this.L_AddEmpty.Location = new System.Drawing.Point(7, 18);
-            this.L_AddEmpty.Name = "L_AddEmpty";
-            this.L_AddEmpty.Size = new System.Drawing.Size(152, 13);
-            this.L_AddEmpty.TabIndex = 26;
-            this.L_AddEmpty.Text = "Convert to the new key format!";
-            // 
-            // B_Compat
-            // 
-            this.B_Compat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.B_Compat.Location = new System.Drawing.Point(168, 12);
-            this.B_Compat.Name = "B_Compat";
-            this.B_Compat.Size = new System.Drawing.Size(114, 23);
-            this.B_Compat.TabIndex = 25;
-            this.B_Compat.Text = "Open Converter";
-            this.B_Compat.UseVisualStyleBackColor = true;
+            this.CHK_BoldIVs.AutoSize = true;
+            this.CHK_BoldIVs.Checked = true;
+            this.CHK_BoldIVs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CHK_BoldIVs.Location = new System.Drawing.Point(17, 54);
+            this.CHK_BoldIVs.Name = "CHK_BoldIVs";
+            this.CHK_BoldIVs.Size = new System.Drawing.Size(119, 17);
+            this.CHK_BoldIVs.TabIndex = 30;
+            this.CHK_BoldIVs.Text = "[R] Bold Perfect IVs";
+            this.CHK_BoldIVs.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -415,7 +451,7 @@
             this.groupBox1.Controls.Add(this.B_File1);
             this.groupBox1.Controls.Add(this.TB_File2);
             this.groupBox1.Controls.Add(this.TB_File1);
-            this.groupBox1.Location = new System.Drawing.Point(0, 147);
+            this.groupBox1.Location = new System.Drawing.Point(1, 191);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(290, 95);
             this.groupBox1.TabIndex = 24;
@@ -517,10 +553,10 @@
             this.RTB_OPTIONS.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RTB_OPTIONS.Location = new System.Drawing.Point(0, 95);
+            this.RTB_OPTIONS.Location = new System.Drawing.Point(0, 100);
             this.RTB_OPTIONS.Name = "RTB_OPTIONS";
             this.RTB_OPTIONS.ReadOnly = true;
-            this.RTB_OPTIONS.Size = new System.Drawing.Size(290, 50);
+            this.RTB_OPTIONS.Size = new System.Drawing.Size(290, 90);
             this.RTB_OPTIONS.TabIndex = 12;
             this.RTB_OPTIONS.Text = "";
             this.RTB_OPTIONS.ReadOnlyChanged += new System.EventHandler(this.changeReadOnly);
@@ -543,6 +579,7 @@
             this.CB_MainLanguage.Name = "CB_MainLanguage";
             this.CB_MainLanguage.Size = new System.Drawing.Size(81, 21);
             this.CB_MainLanguage.TabIndex = 15;
+            this.CB_MainLanguage.SelectedIndexChanged += new System.EventHandler(this.changelanguage);
             // 
             // CB_Game
             // 
@@ -560,77 +597,6 @@
             this.CB_Game.TabIndex = 16;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
             // 
-            // CHK_BoldIVs
-            // 
-            this.CHK_BoldIVs.AutoSize = true;
-            this.CHK_BoldIVs.Checked = true;
-            this.CHK_BoldIVs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CHK_BoldIVs.Location = new System.Drawing.Point(17, 54);
-            this.CHK_BoldIVs.Name = "CHK_BoldIVs";
-            this.CHK_BoldIVs.Size = new System.Drawing.Size(119, 17);
-            this.CHK_BoldIVs.TabIndex = 30;
-            this.CHK_BoldIVs.Text = "[R] Bold Perfect IVs";
-            this.CHK_BoldIVs.UseVisualStyleBackColor = true;
-            // 
-            // CHK_Split
-            // 
-            this.CHK_Split.AutoSize = true;
-            this.CHK_Split.Location = new System.Drawing.Point(17, 31);
-            this.CHK_Split.Name = "CHK_Split";
-            this.CHK_Split.Size = new System.Drawing.Size(78, 17);
-            this.CHK_Split.TabIndex = 31;
-            this.CHK_Split.Text = "Split Boxes";
-            this.CHK_Split.UseVisualStyleBackColor = true;
-            // 
-            // CB_BoxColor
-            // 
-            this.CB_BoxColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CB_BoxColor.FormattingEnabled = true;
-            this.CB_BoxColor.Items.AddRange(new object[] {
-            "Cycle",
-            "Default",
-            "Blue",
-            "Green",
-            "Yellow",
-            "Red"});
-            this.CB_BoxColor.Location = new System.Drawing.Point(122, 74);
-            this.CB_BoxColor.Name = "CB_BoxColor";
-            this.CB_BoxColor.Size = new System.Drawing.Size(80, 21);
-            this.CB_BoxColor.TabIndex = 32;
-            // 
-            // CHK_ColorBox
-            // 
-            this.CHK_ColorBox.AutoSize = true;
-            this.CHK_ColorBox.Checked = true;
-            this.CHK_ColorBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CHK_ColorBox.Location = new System.Drawing.Point(17, 77);
-            this.CHK_ColorBox.Name = "CHK_ColorBox";
-            this.CHK_ColorBox.Size = new System.Drawing.Size(99, 17);
-            this.CHK_ColorBox.TabIndex = 33;
-            this.CHK_ColorBox.Text = "[R] Color Boxes";
-            this.CHK_ColorBox.UseVisualStyleBackColor = true;
-            // 
-            // CHK_R_Table
-            // 
-            this.CHK_R_Table.AutoSize = true;
-            this.CHK_R_Table.Location = new System.Drawing.Point(128, 31);
-            this.CHK_R_Table.Name = "CHK_R_Table";
-            this.CHK_R_Table.Size = new System.Drawing.Size(70, 17);
-            this.CHK_R_Table.TabIndex = 34;
-            this.CHK_R_Table.Text = "[R] Table";
-            this.CHK_R_Table.UseVisualStyleBackColor = true;
-            this.CHK_R_Table.Visible = false;
-            this.CHK_R_Table.CheckedChanged += new System.EventHandler(this.changeTableStatus);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(228, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 35;
-            this.label1.Text = "<100% data";
-            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -640,6 +606,7 @@
             this.Controls.Add(this.CB_Game);
             this.Controls.Add(this.CB_MainLanguage);
             this.Controls.Add(this.tab_Main);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(700, 750);
             this.MinimumSize = new System.Drawing.Size(340, 370);
             this.Name = "Form1";
@@ -652,8 +619,6 @@
             this.Tab_SAV.PerformLayout();
             this.Tab_Options.ResumeLayout(false);
             this.Tab_Options.PerformLayout();
-            this.GB_Compat.ResumeLayout(false);
-            this.GB_Compat.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -687,8 +652,6 @@
         private System.Windows.Forms.ComboBox CB_BoxStart;
         private System.Windows.Forms.ComboBox CB_MainLanguage;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox GB_Compat;
-        private System.Windows.Forms.Button B_Compat;
         private System.Windows.Forms.ComboBox CB_Game;
         private System.Windows.Forms.Label L_KeyBV;
         private System.Windows.Forms.Label L_BVTeam;
@@ -697,7 +660,6 @@
         private System.Windows.Forms.ComboBox CB_BoxEnd;
         private System.Windows.Forms.Label L_KeySAV;
         private System.Windows.Forms.CheckBox CHK_ShowFirst;
-        private System.Windows.Forms.Label L_AddEmpty;
         private System.Windows.Forms.Label L_SAVStats;
         private System.Windows.Forms.ComboBox CB_BoxColor;
         private System.Windows.Forms.CheckBox CHK_Split;

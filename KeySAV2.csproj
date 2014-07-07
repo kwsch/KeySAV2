@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -202,6 +205,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\text\ko\text_Types_ko.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
+    <None Include="Resources\text\ko\text_Forms_ko.txt" />
+    <None Include="Resources\text\ja\text_Forms_ja.txt" />
+    <None Include="Resources\text\it\text_Forms_it.txt" />
+    <None Include="Resources\text\fr\text_Forms_fr.txt" />
+    <None Include="Resources\text\es\text_Forms_es.txt" />
+    <None Include="Resources\text\en\text_Forms_en.txt" />
+    <None Include="Resources\text\de\text_Forms_de.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

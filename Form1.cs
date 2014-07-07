@@ -74,6 +74,7 @@ namespace KeySAV2
         public static string path_exe = System.Windows.Forms.Application.StartupPath;
         public static string datapath = path_exe + "\\data";
         public static string dbpath = path_exe + "\\db";
+        public static string bakpath = path_exe + "\\backup";
         public string path_3DS = "";
         public string path_POW = "";
 
@@ -140,6 +141,10 @@ namespace KeySAV2
                 if (!Directory.Exists(dbpath)) // Create db path if it doesn't exist.
                 {
                     DirectoryInfo di = Directory.CreateDirectory(dbpath);
+                }
+                if (!Directory.Exists(bakpath)) // Create backup path if it doesn't exist.
+                {
+                    DirectoryInfo di = Directory.CreateDirectory(bakpath);
                 }
             
                 // Load .ini data.
@@ -411,7 +416,7 @@ namespace KeySAV2
                 savkeypath = keyfile;
             }
 
-            B_GoSAV.Enabled = CB_BoxEnd.Enabled = CB_BoxStart.Enabled = !(keyfile == "");
+            B_GoSAV.Enabled = CB_BoxEnd.Enabled = CB_BoxStart.Enabled = B_BKP_SAV.Visible = !(keyfile == "");
             byte[] key = File.ReadAllBytes(keyfile);
             byte[] empty = new Byte[232];
             // Save file is already loaded.
@@ -436,7 +441,7 @@ namespace KeySAV2
             scanSAV(savefile, key, empty);
             File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
             CB_BoxStart.SelectedIndex = 1; // Select Box 1 instead of All... for simplicity's sake.
-            // changeboxsetting(null, null);
+            changeboxsetting(null, null);
         }
         private void openVID(string path)
         {
@@ -454,15 +459,15 @@ namespace KeySAV2
             // Fetch Stamp
             ulong stamp = BitConverter.ToUInt64(batvideo, 0x10);
             string keyfile = fetchKey(stamp, 0x1000);
+            B_GoBV.Enabled = CB_Team.Enabled = B_BKP_BV.Visible = (keyfile != "");
             if (keyfile == "")
             {
                 L_KeyBV.Text = "Key not found. Please break for this BV first.";
-                B_GoBV.Enabled = CB_Team.Enabled = false;
+                return;
             }
             else
             {
                 string name = new FileInfo(keyfile).Name;
-                B_GoBV.Enabled = CB_Team.Enabled = true;
                 L_KeyBV.Text = "Key: " + name;
                 vidkeypath = keyfile;
             }
@@ -1735,8 +1740,8 @@ namespace KeySAV2
         // UI Prompted Updates
         private void changeboxsetting(object sender, EventArgs e)
         {
-            CB_BoxEnd.Visible = L_BoxThru.Visible = !(CB_BoxStart.Text == "All");
-            if (CB_BoxEnd.Visible)
+            CB_BoxEnd.Visible = CB_BoxEnd.Enabled = L_BoxThru.Visible = !(CB_BoxStart.Text == "All");
+            if (CB_BoxEnd.Enabled)
             {
                 int start = Convert.ToInt16(CB_BoxStart.Text);
                 CB_BoxEnd.Items.Clear();
@@ -2088,6 +2093,64 @@ namespace KeySAV2
                     isshiny = (TSV == ESV);
                 }
             }
+        }
+
+        private void B_BKP_SAV_Click(object sender, EventArgs e)
+        {
+            TextBox tb = TB_SAV;
+
+            FileInfo fi = new FileInfo(tb.Text);
+            DateTime dt = fi.LastWriteTime;
+            int year = dt.Year;
+            int month = dt.Month;
+            int day = dt.Day;
+            int hour = dt.Hour;
+            int minute = dt.Minute;
+            int second = dt.Second;
+
+            string bkpdate = year.ToString("0000") + month.ToString("00") + day.ToString("00") + hour.ToString("00") + minute.ToString("00") + second.ToString("00") + " ";
+            string newpath = bakpath + "\\" + bkpdate + fi.Name;
+            if (File.Exists(newpath))
+            {
+                DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
+                if (sdr == DialogResult.Yes)
+                {
+                    File.Delete(newpath);
+                }
+                else return;
+            }
+
+            File.Copy(tb.Text, newpath);
+            MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
+        }
+
+        private void B_BKP_BV_Click(object sender, EventArgs e)
+        {
+            TextBox tb = TB_BV;
+
+            FileInfo fi = new FileInfo(tb.Text);
+            DateTime dt = fi.LastWriteTime;
+            int year = dt.Year;
+            int month = dt.Month;
+            int day = dt.Day;
+            int hour = dt.Hour;
+            int minute = dt.Minute;
+            int second = dt.Second;
+
+            string bkpdate = year.ToString("0000") + month.ToString("00") + day.ToString("00") + hour.ToString("00") + minute.ToString("00") + second.ToString("00") + " ";
+            string newpath = bakpath + "\\" + bkpdate + fi.Name;
+            if (File.Exists(newpath))
+            {
+                DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
+                if (sdr == DialogResult.Yes)
+                {
+                    File.Delete(newpath);
+                }
+                else return;
+            }
+
+            File.Copy(tb.Text, newpath);
+            MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
         }
     }
 }

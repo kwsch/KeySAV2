@@ -69,6 +69,8 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
+            this.B_BKP_BV = new System.Windows.Forms.Button();
+            this.B_BKP_SAV = new System.Windows.Forms.Button();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
@@ -93,6 +95,7 @@
             // 
             // Tab_BV
             // 
+            this.Tab_BV.Controls.Add(this.B_BKP_BV);
             this.Tab_BV.Controls.Add(this.L_KeyBV);
             this.Tab_BV.Controls.Add(this.L_BVTeam);
             this.Tab_BV.Controls.Add(this.CB_Team);
@@ -184,6 +187,7 @@
             // 
             // Tab_SAV
             // 
+            this.Tab_SAV.Controls.Add(this.B_BKP_SAV);
             this.Tab_SAV.Controls.Add(this.L_SAVStats);
             this.Tab_SAV.Controls.Add(this.L_BoxThru);
             this.Tab_SAV.Controls.Add(this.CB_BoxEnd);
@@ -599,6 +603,30 @@
             this.CB_Game.TabIndex = 16;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
             // 
+            // B_BKP_BV
+            // 
+            this.B_BKP_BV.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.B_BKP_BV.Location = new System.Drawing.Point(233, 51);
+            this.B_BKP_BV.Name = "B_BKP_BV";
+            this.B_BKP_BV.Size = new System.Drawing.Size(55, 20);
+            this.B_BKP_BV.TabIndex = 21;
+            this.B_BKP_BV.Text = "Backup BV";
+            this.B_BKP_BV.UseVisualStyleBackColor = true;
+            this.B_BKP_BV.Visible = false;
+            this.B_BKP_BV.Click += new System.EventHandler(this.B_BKP_BV_Click);
+            // 
+            // B_BKP_SAV
+            // 
+            this.B_BKP_SAV.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.B_BKP_SAV.Location = new System.Drawing.Point(233, 51);
+            this.B_BKP_SAV.Name = "B_BKP_SAV";
+            this.B_BKP_SAV.Size = new System.Drawing.Size(55, 20);
+            this.B_BKP_SAV.TabIndex = 26;
+            this.B_BKP_SAV.Text = "Backup SAV";
+            this.B_BKP_SAV.UseVisualStyleBackColor = true;
+            this.B_BKP_SAV.Visible = false;
+            this.B_BKP_SAV.Click += new System.EventHandler(this.B_BKP_SAV_Click);
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -669,6 +697,8 @@
         private System.Windows.Forms.CheckBox CHK_ColorBox;
         private System.Windows.Forms.CheckBox CHK_R_Table;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button B_BKP_BV;
+        private System.Windows.Forms.Button B_BKP_SAV;
 
     }
 }

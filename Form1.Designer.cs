@@ -147,7 +147,7 @@
             this.B_GoBV.TabIndex = 15;
             this.B_GoBV.Text = "Go";
             this.B_GoBV.UseVisualStyleBackColor = true;
-            this.B_GoBV.Click += new System.EventHandler(this.goDumpBV);
+            this.B_GoBV.Click += new System.EventHandler(this.dumpBV);
             // 
             // B_OpenVideo
             // 
@@ -579,7 +579,7 @@
             this.CB_MainLanguage.Name = "CB_MainLanguage";
             this.CB_MainLanguage.Size = new System.Drawing.Size(81, 21);
             this.CB_MainLanguage.TabIndex = 15;
-            this.CB_MainLanguage.SelectedIndexChanged += new System.EventHandler(this.changelanguage);
+            this.CB_MainLanguage.SelectedIndexChanged += new System.EventHandler(this.changeLanguage);
             // 
             // CB_Game
             // 

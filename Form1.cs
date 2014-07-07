@@ -28,7 +28,7 @@ namespace KeySAV2
             tab_Main.DragEnter += new DragEventHandler(tabMain_DragEnter);
             tab_Main.DragDrop += new DragEventHandler(tabMain_DragDrop);
 
-            myTimer.Interval = 100; // milliseconds per trigger interval
+            myTimer.Interval = 400; // milliseconds per trigger interval (0.4s)
             myTimer.Start();
             CB_Game.SelectedIndex = 0;
             CB_MainLanguage.SelectedIndex = 0;
@@ -384,14 +384,8 @@ namespace KeySAV2
             {
                 MessageBox.Show("Incorrect File Size"); return;
             }
-            if (TB_SAV.InvokeRequired)
-            {
-                TB_SAV.Invoke(new MethodInvoker(delegate { TB_SAV.Text = path; }));
-            }
-            else 
-            {
-                TB_SAV.Text = path;
-            }
+            
+            TB_SAV.Text = path;
 
             // Go ahead and load the save file into RAM...
             byte[] input = File.ReadAllBytes(path);
@@ -1659,7 +1653,7 @@ namespace KeySAV2
                 if (Directory.Exists(savpath))
                 {
                     if (File.Exists(savpath + "00000001.sav"))
-                        openSAV(savpath + "00000001.sav");
+                        this.Invoke(new MethodInvoker(delegate { openSAV(savpath + "00000001.sav"); }));
                 }
                 // Fetch the latest video
                 if (Directory.Exists(vidpath))
@@ -1669,7 +1663,7 @@ namespace KeySAV2
                         FileInfo BV = GetNewestFile(new DirectoryInfo(vidpath));
                         if (BV.Length == 28256)
                         {
-                            openVID(BV.FullName);
+                            this.Invoke(new MethodInvoker(delegate { openVID(BV.FullName); }));
                         }
                     }
                     catch { }

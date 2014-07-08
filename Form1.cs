@@ -108,7 +108,7 @@ namespace KeySAV2
         public bool custom1b = false; public bool custom2b = false; public bool custom3b = false;
         public string[] boxcolors = new string[] { "", "###", "####", "#####", "######" };
         private string csvdata = "";
-        private string csvheader = "Box,Slot,Species,Gender,Nature,Ability,HP IV,ATK IV,DEF IV,SPA IV,SPD IV,SPE IV,HP Type,ESV,TSV,Nickname,OT,Ball,TID,SID,HP EV,ATK EV,DEF EV,SPA EV,SPD EV,SPE EV,Move 1,Move 2,Move 3,Move 4";
+        private string csvheader = "";
         public int dumpedcounter = 0;
         private int slots = 0;
         public bool ghost = false;
@@ -790,6 +790,15 @@ namespace KeySAV2
             string ev_sa = data.SPA_EV.ToString();
             string ev_sd = data.SPD_EV.ToString();
             string ev_se = data.SPE_EV.ToString();
+
+            // Bonus
+            string relearn1 = movelist[data.eggmove1].ToString();
+            string relearn2 = movelist[data.eggmove2].ToString();
+            string relearn3 = movelist[data.eggmove3].ToString();
+            string relearn4 = movelist[data.eggmove4].ToString();
+            string isshiny = ""; if (data.isshiny) isshiny = "★";
+            string isegg = ""; if (data.isegg) isegg = "✓";
+
             if (!data.isegg) ESV = "";
 
             // Vivillon Forms...
@@ -814,12 +823,12 @@ namespace KeySAV2
             }
             if (CB_ExportStyle.SelectedIndex == 6)
             {
-                csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29}\r\n",
-                    box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4);
+                csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
+                    box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
             }
             if (CB_ExportStyle.SelectedIndex == 7)
             {
-                string isshiny = "";
+                isshiny = "";
                 if (data.isshiny)
                     isshiny = " ★";
                 if (data.isnick)
@@ -846,6 +855,7 @@ namespace KeySAV2
         }
         private void DumpSAV(object sender, EventArgs e)
         {
+            csvheader = "Box,Row,Column,Species,Gender,Nature,Ability,HP IV,ATK IV,DEF IV,SPA IV,SPD IV,SPE IV,HP Type,ESV,TSV,Nickname,OT,Ball,TID,SID,HP EV,ATK EV,DEF EV,SPA EV,SPD EV,SPE EV,Move 1,Move 2,Move 3,Move 4,Relearn 1, Relearn 2, Relearn 3, Relearn 4, Shiny, Egg";
             csvdata = csvheader + "\r\n";
             RTB_SAV.Clear();
             dumpedcounter = 0;
@@ -989,16 +999,24 @@ namespace KeySAV2
             string TID = data.TID.ToString("00000");
             string SID = data.SID.ToString("00000");
             // if (!data.isegg) ESV = "";
-            string move1 = data.move1.ToString();
-            string move2 = data.move2.ToString();
-            string move3 = data.move3.ToString();
-            string move4 = data.move4.ToString();
+            string move1 = movelist[data.move1];
+            string move2 = movelist[data.move2];
+            string move3 = movelist[data.move3];
+            string move4 = movelist[data.move4];
             string ev_hp = data.HP_EV.ToString();
             string ev_at = data.ATK_EV.ToString();
             string ev_de = data.DEF_EV.ToString();
             string ev_sa = data.SPA_EV.ToString();
             string ev_sd = data.SPD_EV.ToString();
             string ev_se = data.SPE_EV.ToString();
+
+            // Bonus
+            string relearn1 = movelist[data.eggmove1].ToString();
+            string relearn2 = movelist[data.eggmove2].ToString();
+            string relearn3 = movelist[data.eggmove3].ToString();
+            string relearn4 = movelist[data.eggmove4].ToString();
+            string isshiny = ""; if (data.isshiny) isshiny = "★";
+            string isegg = ""; if (data.isegg) isegg = "✓";
 
             // Vivillon Forms...
             if (data.species >= 664 && data.species <= 666)
@@ -1021,12 +1039,12 @@ namespace KeySAV2
             }
             if (CB_ExportStyle.SelectedIndex == 6)
             {
-                csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29}\r\n",
-                    box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4);
+                csvdata += String.Format("{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
+                    box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
             }
             if (CB_ExportStyle.SelectedIndex == 7)
             {
-                string isshiny = "";
+                isshiny = "";
                 if (data.isshiny)
                     isshiny = " ★";
                 if (data.isnick) 
@@ -1050,6 +1068,7 @@ namespace KeySAV2
         } // BV
         private void dumpBV(object sender, EventArgs e)
         {
+            csvheader = "Position,Species,Gender,Nature,Ability,HP IV,ATK IV,DEF IV,SPA IV,SPD IV,SPE IV,HP Type,ESV,TSV,Nickname,OT,Ball,TID,SID,HP EV,ATK EV,DEF EV,SPA EV,SPD EV,SPE EV,Move 1,Move 2,Move 3,Move 4,Relearn 1, Relearn 2, Relearn 3, Relearn 4, Shiny, Egg";
             csvdata = csvheader + "\r\n";
             RTB_VID.Clear();
             // player @ 0xX100, opponent @ 0x1800;

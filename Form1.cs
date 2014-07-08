@@ -168,12 +168,14 @@ namespace KeySAV2
                         CB_ExportStyle.SelectedIndex = Convert.ToInt16(tr.ReadLine());
                         CB_MainLanguage.SelectedIndex = Convert.ToInt16(tr.ReadLine());
                         CB_Game.SelectedIndex = Convert.ToInt16(tr.ReadLine());
-                        CHK_ShowFirst.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
+                        CHK_MarkFirst.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
                         CHK_Split.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
                         CHK_BoldIVs.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
                         CB_BoxColor.SelectedIndex = Convert.ToInt16(tr.ReadLine());
                         CHK_ColorBox.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
-
+                        CHK_HideFirst.Checked = Convert.ToBoolean(Convert.ToInt16(tr.ReadLine()));
+                        this.Height = Convert.ToInt16(tr.ReadLine());
+                        this.Width = Convert.ToInt16(tr.ReadLine());
                         tr.Close();
                     }
                     catch
@@ -215,11 +217,14 @@ namespace KeySAV2
                         tr.WriteLine(CB_ExportStyle.SelectedIndex.ToString());
                         tr.WriteLine(CB_MainLanguage.SelectedIndex.ToString());
                         tr.WriteLine(CB_Game.SelectedIndex.ToString());
-                        tr.WriteLine(Convert.ToInt16(CHK_ShowFirst.Checked).ToString());
+                        tr.WriteLine(Convert.ToInt16(CHK_MarkFirst.Checked).ToString());
                         tr.WriteLine(Convert.ToInt16(CHK_Split.Checked).ToString());
                         tr.WriteLine(Convert.ToInt16(CHK_BoldIVs.Checked).ToString());
                         tr.WriteLine(CB_BoxColor.SelectedIndex.ToString());
                         tr.WriteLine(Convert.ToInt16(CHK_ColorBox.Checked).ToString());
+                        tr.WriteLine(Convert.ToInt16(CHK_HideFirst.Checked).ToString());
+                        tr.WriteLine(this.Height.ToString());
+                        tr.WriteLine(this.Width.ToString());
                         tr.Close();
                     }
                     catch
@@ -741,6 +746,7 @@ namespace KeySAV2
         }
         private void dumpPKX_SAV(byte[] pkx, int dumpnum, int dumpstart)
         {
+            if (ghost && CHK_HideFirst.Checked) return;
             if (pkx == null || !verifyCHK(pkx))
             {
                 //RTB_SAV.AppendText("SLOT LOCKED\r\n");
@@ -754,8 +760,6 @@ namespace KeySAV2
                 //RTB_SAV.AppendText("SLOT EMPTY");
                 return;
             }
-            //if (ghost && CHK_ShowFirst.Checked) return;
-
             string box = "B"+(dumpstart + (dumpnum/30)).ToString("00");
             string slot = (((dumpnum%30) / 6 + 1).ToString() + "," + (dumpnum % 6 + 1).ToString());
             string species = specieslist[data.species];
@@ -827,9 +831,16 @@ namespace KeySAV2
                     + data.chk.ToString("X4") + data.EC.ToString("X8");
                 File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
+            if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
+            {
+                if (ESV != "")
+                {
+                    ESV = "[" + ESV + "]";
+                }
+            }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
-            if (ghost && CHK_ShowFirst.Checked) result = "~" + result;
+            if (ghost && CHK_MarkFirst.Checked) result = "~" + result;
             dumpedcounter++;
             RTB_SAV.AppendText(result + "\r\n");
         }
@@ -885,6 +896,19 @@ namespace KeySAV2
                 header += "\r\n|";
                 for (int i = 0; i < args; i++)
                     header += ":---:|";
+
+                if (!CHK_Split.Checked) // Still append the header if we aren't doing it for every box.
+                {
+                    // Add Reddit Coloring
+                    if (CB_BoxColor.SelectedIndex == 0)
+                    {
+                        RTB_SAV.AppendText(boxcolors[1 + ((rnd32()) % 4)]);
+                    }
+                    else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
+                    // Append Box Name then Header
+                    RTB_SAV.AppendText("KeySAV Dump:\r\n\r\n");
+                    RTB_SAV.AppendText(header + "\r\n");
+                }
             }
 
             for (int i = 0; i < count; i++)
@@ -964,7 +988,7 @@ namespace KeySAV2
             string otname = data.ot;
             string TID = data.TID.ToString("00000");
             string SID = data.SID.ToString("00000");
-            if (!data.isegg) ESV = "";
+            // if (!data.isegg) ESV = "";
             string move1 = data.move1.ToString();
             string move2 = data.move2.ToString();
             string move3 = data.move3.ToString();
@@ -1013,10 +1037,15 @@ namespace KeySAV2
                     + data.chk.ToString("X4") + data.EC.ToString("X8");
                 File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
             }
+            if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
+            {
+                if (ESV != "")
+                {
+                    ESV = "[" + ESV + "]";
+                }
+            }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
-
-            if (ghost && CHK_ShowFirst.Checked) result = "~" + result;
             RTB_VID.AppendText(result + "\r\n");
         } // BV
         private void dumpBV(object sender, EventArgs e)
@@ -1803,7 +1832,7 @@ namespace KeySAV2
             {
                 CHK_R_Table.Visible = false;
                 RTB_OPTIONS.ReadOnly = true; RTB_OPTIONS.Text =
-                    "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - [{13}]";
+                    "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
             }
             else if (CB_ExportStyle.SelectedIndex == 1) // Reddit
             {
@@ -1817,7 +1846,7 @@ namespace KeySAV2
                 CHK_R_Table.Visible = false;
                 CHK_BoldIVs.Visible = CHK_ColorBox.Visible = CB_BoxColor.Visible = true;
                 RTB_OPTIONS.ReadOnly = true; RTB_OPTIONS.Text =
-                "OT: {16} | TID: {18} | TSV: {14} |";
+                "{0} | {1} | {16} | {18} | {14} |";
             }
             else if (CB_ExportStyle.SelectedIndex == 3) // Custom 1
             {
@@ -1868,26 +1897,26 @@ namespace KeySAV2
                 custom3 = RTB_OPTIONS.Text;
             }
         }
+        private void changeTableStatus(object sender, EventArgs e)
+        {
+            if (CB_ExportStyle.SelectedIndex == 3) // Custom 1
+            {
+                custom1b = CHK_R_Table.Checked;
+            }
+            else if (CB_ExportStyle.SelectedIndex == 4) // Custom 2
+            {
+                custom2b = CHK_R_Table.Checked;
+            }
+            else if (CB_ExportStyle.SelectedIndex == 5) // Custom 3
+            {
+                custom3b = CHK_R_Table.Checked;
+            }
+        }
         private void changeReadOnly(object sender, EventArgs e)
         {
             RichTextBox rtb = sender as RichTextBox;
             if (rtb.ReadOnly) rtb.BackColor = Color.FromKnownColor(KnownColor.Control);
             else rtb.BackColor = Color.FromKnownColor(KnownColor.White);
-        }
-        private void changeTableStatus(object sender, EventArgs e)
-        {
-            if (CB_ExportStyle.SelectedIndex == 2) // Custom 1
-            {
-                custom1b = CHK_R_Table.Checked;
-            }
-            else if (CB_ExportStyle.SelectedIndex == 3) // Custom 2
-            {
-                custom2b = CHK_R_Table.Checked;
-            }
-            else if (CB_ExportStyle.SelectedIndex == 4) // Custom 3
-            {
-                custom3b = CHK_R_Table.Checked;
-            }
         }
 
         // Translation
@@ -1934,8 +1963,8 @@ namespace KeySAV2
             // vivillon pattern list
             vivlist = new string[20];
             vivlist[0] = formlist[666];
-            for (int i = 0; i < 19; i++)
-                vivlist[i] = formlist[836];
+            for (int i = 1; i < 20; i++)
+                vivlist[i] = formlist[835+i];
         }
 
         // Structs

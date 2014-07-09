@@ -805,7 +805,7 @@ namespace KeySAV2
             if (data.species >= 664 && data.species <= 666)
                 species += "-" + vivlist[data.altforms];
 
-            if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_BoldIVs.Checked))
+            if (((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_BoldIVs.Checked))
             {
                 if (hp == "31") hp = "**31**";
                 if (atk == "31") atk = "**31**";
@@ -909,16 +909,19 @@ namespace KeySAV2
 
                 if (!CHK_Split.Checked) // Still append the header if we aren't doing it for every box.
                 {
-                    // Add Reddit Coloring
-                    if (CB_BoxColor.SelectedIndex == 0)
+                    // Add header if reddit
+                    if (CHK_ColorBox.Checked)
                     {
-                        RTB_SAV.AppendText(boxcolors[1 + ((rnd32()) % 4)]);
+                        if (CB_BoxColor.SelectedIndex == 0)
+                        {
+                            RTB_SAV.AppendText(boxcolors[1 + (rnd32() % 4)]);
+                        }
+                        else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                     }
-                    else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                     // Append Box Name then Header
-                    RTB_SAV.AppendText("KeySAV Dump:\r\n\r\n");
+                    RTB_SAV.AppendText("B" + (boxstart).ToString("00") + "+\r\n\r\n");
                     RTB_SAV.AppendText(header + "\r\n");
-                }
+                } 
             }
 
             for (int i = 0; i < count; i++)
@@ -927,14 +930,17 @@ namespace KeySAV2
                 {
                     RTB_SAV.AppendText("\r\n");
                     // Add box header
-                    if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked))
+                    if ((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || ((CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_R_Table.Checked))
                     {
-                        // Add Reddit Coloring
-                        if (CB_BoxColor.SelectedIndex == 0)
+                        if (CHK_ColorBox.Checked)
                         {
-                            RTB_SAV.AppendText(boxcolors[1 + ((i / 30 + boxstart) % 4)]);
+                            // Add Reddit Coloring
+                            if (CB_BoxColor.SelectedIndex == 0)
+                            {
+                                RTB_SAV.AppendText(boxcolors[1 + ((i / 30 + boxstart) % 4)]);
+                            }
+                            else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                         }
-                        else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                     }
                     // Append Box Name then Header
                     RTB_SAV.AppendText("B" + (i / 30 + boxstart).ToString("00") + "\r\n\r\n");
@@ -1022,7 +1028,7 @@ namespace KeySAV2
             if (data.species >= 664 && data.species <= 666)
                 species += "-" + vivlist[data.altforms];
 
-            if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_BoldIVs.Checked))
+            if (((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_BoldIVs.Checked))
             {
                 if (hp == "31") hp = "**31**";
                 if (atk == "31") atk = "**31**";
@@ -1086,16 +1092,19 @@ namespace KeySAV2
             } 
             
             string header = String.Format(RTB_OPTIONS.Text, "~", "Slot", "Species", "Gender", "Nature", "Ability", "HP", "ATK", "DEF", "SPA", "SPD", "SPE", "HiddenPower", "ESV", "TSV", "Nick", "OT", "Ball", "TID", "SID");
-            
+
             // Add header if reddit
-            if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked))
+            if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || ((CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6) && CHK_R_Table.Checked))
             {
                 // Add Reddit Coloring
-                if (CB_BoxColor.SelectedIndex == 0)
+                if (CHK_ColorBox.Checked)
                 {
-                    RTB_VID.AppendText(boxcolors[1 + (rnd32() % 4)]);
+                    if (CB_BoxColor.SelectedIndex == 0)
+                    {
+                        RTB_VID.AppendText(boxcolors[1 + (rnd32() % 4)]);
+                    }
+                    else RTB_VID.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                 }
-                else RTB_VID.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                 RTB_VID.AppendText(CB_Team.Text + "\r\n\r\n");
                 
                 int args = Regex.Split(RTB_OPTIONS.Text, "{").Length;

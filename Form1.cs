@@ -135,23 +135,15 @@ namespace KeySAV2
             {
                 // Detect startup path and data path.
                 if (!Directory.Exists(datapath)) // Create data path if it doesn't exist.
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(datapath);
-                }
+                    Directory.CreateDirectory(datapath);
                 if (!Directory.Exists(dbpath)) // Create db path if it doesn't exist.
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(dbpath);
-                }
+                    Directory.CreateDirectory(dbpath);
                 if (!Directory.Exists(bakpath)) // Create backup path if it doesn't exist.
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(bakpath);
-                }
+                    Directory.CreateDirectory(bakpath);
             
                 // Load .ini data.
                 if (!File.Exists(datapath + "\\config.ini"))
-                {
                     File.Create(datapath + "\\config.ini");
-                }
                 else
                 {
                     TextReader tr = new StreamReader(datapath + "\\config.ini");
@@ -184,7 +176,7 @@ namespace KeySAV2
                     }
                 }
             }
-            catch {}
+            catch (Exception e) { MessageBox.Show("Ini config file loading failed.\n\n" + e, "Error"); }
         }
         private void saveINI()
         {
@@ -192,15 +184,11 @@ namespace KeySAV2
             {
                 // Detect startup path and data path.
                 if (!Directory.Exists(datapath)) // Create data path if it doesn't exist.
-                {
-                    DirectoryInfo di = Directory.CreateDirectory(datapath);
-                }
+                    Directory.CreateDirectory(datapath);
             
                 // Load .ini data.
                 if (!File.Exists(datapath + "\\config.ini"))
-                {
                     File.Create(datapath + "\\config.ini");
-                }
                 else
                 {
                     TextWriter tr = new StreamWriter(datapath + "\\config.ini");
@@ -233,20 +221,14 @@ namespace KeySAV2
                     }
                 }
             }
-            catch
-            {
-            }
+            catch (Exception e) { MessageBox.Show("Ini config file saving failed.\n\n" + e, "Error"); }
         }
         public volatile int game;
 
         // RNG
         private static uint LCRNG(uint seed)
         {
-            uint a = 0x41C64E6D;
-            uint c = 0x00006073;
-
-            seed = (seed * a + c) & 0xFFFFFFFF;
-            return seed;
+            return (seed * 0x41C64E6D + 0x00006073) & 0xFFFFFFFF;
         }
         private static Random rand = new Random();
         private static uint rnd32()
@@ -272,15 +254,11 @@ namespace KeySAV2
 
             // UnShuffle Away!
             for (int b = 0; b < 4; b++)
-            {
                 Array.Copy(pkx, 8 + 56 * shlog[b], ekx, 8 + 56 * b, 56);
-            }
 
             // Fill the Battle Stats back
             if (pkx.Length > 232)
-            {
                 Array.Copy(pkx, 232, ekx, 232, 28);
-            }
             return ekx;
         }
         private byte[] decryptArray(byte[] ekx)
@@ -317,9 +295,7 @@ namespace KeySAV2
             // If I unshuffle 11 times, the 12th (decryption) will always decrypt to ABCD.
             // 2 x 3 x 4 = 12 (possible unshuffle loops -> total iterations)
             for (int i = 0; i < 11; i++)
-            {
                 ekxdata = shuffleArray(ekxdata, sv);
-            }
 
             uint seed = pv;
             // Encrypt Blocks with RNG Seed
@@ -375,9 +351,7 @@ namespace KeySAV2
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "SAV|*.sav;*.bin";
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
                 openSAV(ofd.FileName);
-            }
         }
         private void B_OpenVid_Click(object sender, EventArgs e)
         {
@@ -387,18 +361,14 @@ namespace KeySAV2
             ofd.RestoreDirectory = true;
             ofd.Filter = "Battle Video|*.*";
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
                 openVID(ofd.FileName);
-            }
         }
         private void openSAV(string path)
         {
             // check to see if good input file
             long len = new FileInfo(path).Length;
             if (len != 0x100000 && len != 0x10009C)
-            {
-                MessageBox.Show("Incorrect File Size"); return;
-            }
+            { MessageBox.Show("Incorrect File Size"); return; }
             
             TB_SAV.Text = path;
 
@@ -436,9 +406,8 @@ namespace KeySAV2
             // Fix CHK
             uint chk = 0;
             for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
-            {
                 chk += BitConverter.ToUInt16(empty, i);
-            }
+
             // Apply New Checksum
             Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
             empty = encryptArray(empty);
@@ -454,9 +423,8 @@ namespace KeySAV2
             B_GoBV.Enabled = CB_Team.Enabled = false;
             long len = new FileInfo(path).Length;
             if (len != 28256)
-            {
-                MessageBox.Show("Incorrect File Size"); return;
-            }
+            { MessageBox.Show("Incorrect File Size"); return; }
+
             TB_BV.Text = path;
 
             // Go ahead and load the save file into RAM...
@@ -466,10 +434,7 @@ namespace KeySAV2
             string keyfile = fetchKey(stamp, 0x1000);
             B_GoBV.Enabled = CB_Team.Enabled = B_BKP_BV.Visible = (keyfile != "");
             if (keyfile == "")
-            {
-                L_KeyBV.Text = "Key not found. Please break for this BV first.";
-                return;
-            }
+            { L_KeyBV.Text = "Key not found. Please break for this BV first."; return; }
             else
             {
                 string name = new FileInfo(keyfile).Name;
@@ -481,9 +446,8 @@ namespace KeySAV2
             CB_Team.Items.Add("My Team");
             byte[] bvkey = File.ReadAllBytes(vidkeypath);
             if (BitConverter.ToUInt64(bvkey, 0x800) != 0)
-            {
                 CB_Team.Items.Add("Enemy Team");
-            }
+
             CB_Team.SelectedIndex = 0;
         }
         private string fetchKey(ulong stamp, int length)
@@ -500,9 +464,7 @@ namespace KeySAV2
                         data = File.ReadAllBytes(files[i]);
                         ulong newstamp = BitConverter.ToUInt64(data, 0x0);
                         if (newstamp == stamp)
-                        {
                             return files[i];
-                        }
                     }
                 }
             }
@@ -562,11 +524,7 @@ namespace KeySAV2
                             ekx = xortwos(ekx, ezeros);
                             Array.Copy(xortwos(encrypteddata, ezeros), 0, keystream, key2off, 232);
                         }
-                        else
-                        {
-                            // Data is invalid; slot was occupied at break and is occupied with something else.
-                            return null; // Not a failed decryption; we just haven't seen new data here yet.
-                        }
+                        else return null; // Not a failed decryption; we just haven't seen new data here yet.
                     }
                 }
             }
@@ -591,11 +549,7 @@ namespace KeySAV2
                             ekx = xortwos(ekx, ezeros);
                             Array.Copy(xortwos(key2, ezeros), 0, keystream, key2off, 232);
                         }
-                        else
-                        {
-                            // Decryption Error
-                            return null;
-                        }
+                        else return null; // Decryption Error
                     }
                 }
                 else if (key2.SequenceEqual(encrypteddata) || key2.SequenceEqual(xortwos(encrypteddata, blank)) || key2.SequenceEqual(xortwos(encrypteddata, ezeros)))
@@ -614,11 +568,7 @@ namespace KeySAV2
                             ekx = xortwos(ekx, ezeros);
                             Array.Copy(xortwos(key1, ezeros), 0, keystream, key1off, 232);
                         }
-                        else
-                        {
-                            // Decryption Error
-                            return null;
-                        }
+                        else return null; // Decryption Error
                     }
                 }
                 else
@@ -671,8 +621,7 @@ namespace KeySAV2
                             Array.Copy(xortwos(encrypteddata, blank), 0, keystream, key2off, 232);
                             Array.Copy(zeros, 0, keystream, key1off, 232);
                         }
-                        else
-                            return null; // unreachable
+                        else return null; // unreachable
                     }
                     else if (keydata1) // Key 1 data is empty
                     {
@@ -694,8 +643,7 @@ namespace KeySAV2
                             Array.Copy(xortwos(key1, blank), 0, keystream, key2off, 232);
                             Array.Copy(zeros, 0, keystream, key1off, 232);
                         }
-                        else 
-                            return null; // unreachable
+                        else return null; // unreachable
                     }
                     else if (keydata2)
                     {
@@ -717,8 +665,7 @@ namespace KeySAV2
                             Array.Copy(xortwos(key2, blank), 0, keystream, key2off, 232);
                             Array.Copy(zeros, 0, keystream, key1off, 232);
                         }
-                        else
-                            return null; // unreachable
+                        else return null; // unreachable
                     }
                 }
             }
@@ -728,11 +675,8 @@ namespace KeySAV2
                 slots++;
                 return pkx;
             }
-            else
-            {
-                // Slot Decryption error?!
-                return null;
-            }
+            else 
+                return null; // Slot Decryption error?!
         }
         private void scanSAV(byte[] input, byte[] keystream, byte[] blank)
         {
@@ -747,19 +691,15 @@ namespace KeySAV2
         private void dumpPKX_SAV(byte[] pkx, int dumpnum, int dumpstart)
         {
             if (ghost && CHK_HideFirst.Checked) return;
-            if (pkx == null || !verifyCHK(pkx))
-            {
-                //RTB_SAV.AppendText("SLOT LOCKED\r\n");
+            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\r\n");
                 return;
-            }
+
             Structures.PKX data = new Structures.PKX(pkx);
 
             // Printout Parsing
-            if (data.species == 0)
-            {
-                //RTB_SAV.AppendText("SLOT EMPTY");
+            if (data.species == 0) //RTB_SAV.AppendText("SLOT EMPTY");
                 return;
-            }
+
             string box = "B"+(dumpstart + (dumpnum/30)).ToString("00");
             string slot = (((dumpnum%30) / 6 + 1).ToString() + "," + (dumpnum % 6 + 1).ToString());
             string species = specieslist[data.species];
@@ -817,10 +757,8 @@ namespace KeySAV2
 
             string format = RTB_OPTIONS.Text;
             if (CB_ExportStyle.SelectedIndex >= 6)
-            {
-                format =
-                       "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
-            }
+                format = "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
+
             if (CB_ExportStyle.SelectedIndex == 6)
             {
                 csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
@@ -843,9 +781,7 @@ namespace KeySAV2
             if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
             {
                 if (ESV != "")
-                {
                     ESV = "[" + ESV + "]";
-                }
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
@@ -874,9 +810,8 @@ namespace KeySAV2
             // Fix CHK
             uint chk = 0;
             for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
-            {
                 chk += BitConverter.ToUInt16(empty, i);
-            }
+
             // Apply New Checksum
             Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
             empty = encryptArray(empty);
@@ -888,9 +823,7 @@ namespace KeySAV2
             int count = 30;
             int boxstart = 1;
             if (CB_BoxStart.Text == "All")
-            {
                 count = 30 * 31;
-            }
             else
             {
                 boxoffset += (Convert.ToInt16(CB_BoxStart.Text) - 1) * 30 * 232;
@@ -913,9 +846,7 @@ namespace KeySAV2
                     if (CHK_ColorBox.Checked)
                     {
                         if (CB_BoxColor.SelectedIndex == 0)
-                        {
                             RTB_SAV.AppendText(boxcolors[1 + (rnd32() % 4)]);
-                        }
                         else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                     }
                     // Append Box Name then Header
@@ -936,9 +867,7 @@ namespace KeySAV2
                         {
                             // Add Reddit Coloring
                             if (CB_BoxColor.SelectedIndex == 0)
-                            {
                                 RTB_SAV.AppendText(boxcolors[1 + ((i / 30 + boxstart) % 4)]);
-                            }
                             else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                         }
                     }
@@ -963,28 +892,21 @@ namespace KeySAV2
                 savecsv.Filter = "Spreadsheet|*.csv";
                 savecsv.FileName = "KeySAV Data Dump.csv";
                 if (savecsv.ShowDialog() == DialogResult.OK)
-                {
-                    string path = savecsv.FileName;
-                    System.IO.File.WriteAllText(path, csvdata, Encoding.UTF8);
-                }
+                    System.IO.File.WriteAllText(savecsv.FileName, csvdata, Encoding.UTF8);
             }
         }
         // BV
         private void dumpPKX_BV(byte[] pkx, int slot)
         {
-            if (pkx == null || !verifyCHK(pkx))
-            {
-                //RTB_SAV.AppendText("SLOT LOCKED\r\n");
+            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\r\n");
                 return;
-            }
+
             Structures.PKX data = new Structures.PKX(pkx);
 
             // Printout Parsing
-            if (data.species == 0)
-            {
-                //RTB_SAV.AppendText("SLOT EMPTY");
+            if (data.species == 0) //RTB_SAV.AppendText("SLOT EMPTY");
                 return;
-            }
+
             string box = "~";
             string species = specieslist[data.species];
             string gender = data.genderstring;
@@ -1039,10 +961,8 @@ namespace KeySAV2
             }
             string format = RTB_OPTIONS.Text;
             if (CB_ExportStyle.SelectedIndex >= 6)
-            {
-                format =
-                       "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
-            }
+                format = "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
+
             if (CB_ExportStyle.SelectedIndex == 6)
             {
                 csvdata += String.Format("{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
@@ -1064,9 +984,7 @@ namespace KeySAV2
             if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
             {
                 if (ESV != "")
-                {
                     ESV = "[" + ESV + "]";
-                }
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID);
 
@@ -1123,13 +1041,9 @@ namespace KeySAV2
                 Array.Copy(keystream, keyoff + 260 * i, key, 0, 260);
                 ekx = xortwos(ekx, key);
                 if (verifyCHK(decryptArray(ekx)))
-                {
                     dumpPKX_BV(decryptArray(ekx),i+1);
-                }
                 else
-                {
                     dumpPKX_BV(null,i);
-                }
             }
 
             // Copy Results to Clipboard
@@ -1217,12 +1131,8 @@ namespace KeySAV2
         {
             B_Break.Enabled = false;
             if (TB_File1.Text != "" && TB_File2.Text != "")
-            {
                 if ((file1 == "SAV" && file2 == "SAV") || (file1 == "BV" && file2 == "BV"))
-                {
                    B_Break.Enabled = true;
-                } 
-            }
         }
 
         // Specific Breaking Branch
@@ -1231,17 +1141,11 @@ namespace KeySAV2
             if (file1 == file2)
             {
                 if (file1 == "SAV")
-                {
                     breakSAV();
-                }
                 else if (file1 == "BV")
-                {
                     breakBV();
-                }
                 else
-                {
                     return;
-                }
             }
         }
         private void breakBV()
@@ -1252,7 +1156,7 @@ namespace KeySAV2
                 byte[] xorstream = new Byte[260 * 6];
                 byte[] breakstream = new Byte[260 * 6];
                 byte[] bvkey = new Byte[0x1000];
-                #region Old Exploit to ensure that the us
+                #region Old Exploit to ensure that the usage is correct
                 // Validity Check to see what all is participating...
 
                 Array.Copy(video1, 0x4E18, breakstream, 0, 260 * 6);
@@ -1271,9 +1175,7 @@ namespace KeySAV2
                 // If old exploit does not properly decrypt slot1...
                 byte[] pkx = decryptArray(ekx1);
                 if (!verifyCHK(pkx))
-                {
-                    MessageBox.Show("Improperly set up Battle Videos. Please follow directions and try again", "Error"); return;
-                }
+                { MessageBox.Show("Improperly set up Battle Videos. Please follow directions and try again", "Error"); return; }
                 // 
 
                 // Start filling up our key...
@@ -1314,7 +1216,6 @@ namespace KeySAV2
 
                     MessageBox.Show("Can dump from Opponent Data on this key too!");
                 }
-
                 #endregion
 
                 string ot = TrimFromZero(Encoding.Unicode.GetString(pkx, 0xB0, 24));
@@ -1334,14 +1235,9 @@ namespace KeySAV2
                 sfd.RestoreDirectory = true;
                 sfd.Filter = "Video Key|*.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    string path = sfd.FileName;
-                    File.WriteAllBytes(path, bvkey);
-                }
+                    File.WriteAllBytes(sfd.FileName, bvkey);
                 else
-                {
                     MessageBox.Show("Chose not to save keystream.", "Alert");
-                }
                 sfd.InitialDirectory = ID; sfd.RestoreDirectory = true;
             }
         }
@@ -1370,19 +1266,15 @@ namespace KeySAV2
                     {
                         // Sanity Placeholders are the same
                         for (int j = 0; j < 4; j++)
-                        {
                             if (break1[i + j] == break2[i + j])
                                 err++;
-                        }
 
                         if (err < 4)
                         {
                             // Keystream ^ PID doesn't match entirely. Keep checking.
                             for (int j = 8; j < 232; j++)
-                            {
                                 if (break1[i + j] == break2[i + j])
                                     err++;
-                            }
 
                             if (err < 20)
                             {
@@ -1452,12 +1344,8 @@ namespace KeySAV2
                 // First, let's get out our polluted EKX's.
                 byte[,] polekx = new Byte[6, 232];
                 for (int i = 0; i < 6; i++)
-                {
-                    for (int j = 0; j < 232; j++)
-                    {   // Save file 1 has them in the second box. XOR them out with the Box2 Polluted Stream
+                    for (int j = 0; j < 232; j++) // Save file 1 has them in the second box. XOR them out with the Box2 Polluted Stream
                         polekx[i, j] = (byte)(break1[offset[1] + 232 * i + j] ^ pstream2[i, j]);
-                    }
-                }
 
                 uint[] encryptionconstants = new uint[6]; // Array for all 6 Encryption Constants. 
                 int valid = 0;
@@ -1475,9 +1363,8 @@ namespace KeySAV2
                         byte[] encryptedekx = new Byte[232];
                         byte[] decryptedpkx = new Byte[232];
                         for (int z = 0; z < 232; z++)
-                        {
                             encryptedekx[z] = polekx[i, z];
-                        }
+
                         decryptedpkx = decryptArray(encryptedekx);
 
                         // finalize data
@@ -1499,11 +1386,8 @@ namespace KeySAV2
                 }
             #endregion
 
-                if (valid == 0)
-                {
-                    // We didn't get any valid EC's where D was not in last. Tell the user to try again with different specimens.
+                if (valid == 0) // We didn't get any valid EC's where D was not in last. Tell the user to try again with different specimens.
                     result = "The 6 supplied Pokemon are not suitable. \r\nRip new saves with 6 different ones that originated from your save file.\r\n";
-                }
 
                 else
                 {
@@ -1512,9 +1396,7 @@ namespace KeySAV2
                     // Let's calculate the actual checksum of our empty pkx.
                     uint chk = 0;
                     for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
-                    {
                         chk += BitConverter.ToUInt16(empty, i);
-                    }
 
                     // Apply New Checksum
                     Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
@@ -1657,22 +1539,14 @@ namespace KeySAV2
                 sfd.FileName = CleanFileName(String.Format("SAV Key - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")));
                 sfd.Filter = "Save Key|*.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    string path = sfd.FileName;
-                    File.WriteAllBytes(path, savkey);
-                }
+                    File.WriteAllBytes(sfd.FileName, savkey);
                 else
-                {
                     MessageBox.Show("Chose not to save keystream.", "Alert");
-                }
+
                 sfd.InitialDirectory = ID; sfd.RestoreDirectory = true;
             }
-            else
-            {
-                // Failed
-                result += "Keystreams were NOT bruteforced!\r\n\r\nStart over and try again :(";
-                MessageBox.Show(result);
-            }
+            else // Failed
+                MessageBox.Show(result + "Keystreams were NOT bruteforced!\r\n\r\nStart over and try again :(");
         }
 
         // Utility
@@ -1727,11 +1601,17 @@ namespace KeySAV2
                     savpath = path_3DS + "\\title\\00040000\\00055e00\\";
                     vidpath = path_3DS + "\\extdata\\00000000\\0000055e\\00000000\\";
                 }
-                else
+                else if (game == 2) 
                 {
-                    // ORAS (Unimplemented)
-                    savpath = path_3DS + "\\title\\00040000\\00055e00\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\0000055e\\00000000\\";
+                    // OR
+                    savpath = path_3DS + "\\title\\00040000\\0011c400\\";
+                    vidpath = path_3DS + "\\extdata\\00000000\\0011c400\\00000000\\";
+                }
+                else if (game == 3)
+                {
+                    // AS
+                    savpath = path_3DS + "\\title\\00040000\\0011c500\\";
+                    vidpath = path_3DS + "\\extdata\\00000000\\0011c500\\00000000\\";
                 }
 
                 if (Directory.Exists(savpath))
@@ -1746,9 +1626,7 @@ namespace KeySAV2
                     {
                         FileInfo BV = GetNewestFile(new DirectoryInfo(vidpath));
                         if (BV.Length == 28256)
-                        {
-                            this.Invoke(new MethodInvoker(delegate { openVID(BV.FullName); }));
-                        }
+                        { this.Invoke(new MethodInvoker(delegate { openVID(BV.FullName); })); }
                     }
                     catch { }
                 }
@@ -1763,16 +1641,12 @@ namespace KeySAV2
             {
                 path_3DS = DriveList[i] + "Nintendo 3DS";
                 if (Directory.Exists(path_3DS))
-                {
                     break;
-                }
+
                 path_3DS = null;
             }
-            if (path_3DS == null)
-            {
-                // No 3DS SD Card Detected
+            if (path_3DS == null) // No 3DS SD Card Detected
                 return;
-            }
             else
             {
                 // 3DS data found in SD card reader. Let's get the title folder location!
@@ -1913,32 +1787,20 @@ namespace KeySAV2
         private void changeFormatText(object sender, EventArgs e)
         {
             if (CB_ExportStyle.SelectedIndex == 3) // Custom 1
-            {
                 custom1 = RTB_OPTIONS.Text;
-            }
             else if (CB_ExportStyle.SelectedIndex == 4) // Custom 2
-            {
                 custom2 = RTB_OPTIONS.Text;
-            }
             else if (CB_ExportStyle.SelectedIndex == 5) // Custom 3
-            {
                 custom3 = RTB_OPTIONS.Text;
-            }
         }
         private void changeTableStatus(object sender, EventArgs e)
         {
             if (CB_ExportStyle.SelectedIndex == 3) // Custom 1
-            {
                 custom1b = CHK_R_Table.Checked;
-            }
             else if (CB_ExportStyle.SelectedIndex == 4) // Custom 2
-            {
                 custom2b = CHK_R_Table.Checked;
-            }
             else if (CB_ExportStyle.SelectedIndex == 5) // Custom 3
-            {
                 custom3b = CHK_R_Table.Checked;
-            }
         }
         private void changeReadOnly(object sender, EventArgs e)
         {
@@ -1959,9 +1821,7 @@ namespace KeySAV2
 
             string[] stringdata = new string[rawlist.Count];
             for (int i = 0; i < rawlist.Count; i++)
-            {
                 stringdata[i] = rawlist[i];
-            }
             return stringdata;
         }
         private void InitializeStrings()
@@ -1978,6 +1838,8 @@ namespace KeySAV2
             specieslist = getStringList("Species", l);
             formlist = getStringList("Forms", l);
 
+            abilitylist[0] = itemlist[0] = movelist[0] = "(" + itemlist[0] + ")";
+
             int[] ballindex = {
                                   0,1,2,3,4,5,6,7,8,9,0xA,0xB,0xC,0xD,0xE,0xF,0x10,
                                   0x1EC,0x1ED,0x1EE,0x1EF,0x1F0,0x1F1,0x1F2,0x1F3,
@@ -1985,9 +1847,8 @@ namespace KeySAV2
                               };
             balls = new string[ballindex.Length];
             for (int i = 0; i < ballindex.Length; i++)
-            {
                 balls[i] = itemlist[ballindex[i]];
-            }
+
             // vivillon pattern list
             vivlist = new string[20];
             vivlist[0] = formlist[666];
@@ -2133,13 +1994,9 @@ namespace KeySAV2
                     otlang = pkx[0xE3];
 
                     if (genderflag == 0)
-                    {
                         genderstring = "♂";
-                    }
                     else if (genderflag == 1)
-                    {
                         genderstring = "♀";
-                    }
                     else genderstring = "-";
 
                     hptype = (15 * ((HP_IV & 1) + 2 * (ATK_IV & 1) + 4 * (DEF_IV & 1) + 8 * (SPE_IV & 1) + 16 * (SPA_IV & 1) + 32 * (SPD_IV & 1))) / 63 + 1;
@@ -2171,10 +2028,9 @@ namespace KeySAV2
             {
                 DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
                 if (sdr == DialogResult.Yes)
-                {
                     File.Delete(newpath);
-                }
-                else return;
+                else 
+                    return;
             }
 
             File.Copy(tb.Text, newpath);
@@ -2200,10 +2056,9 @@ namespace KeySAV2
             {
                 DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
                 if (sdr == DialogResult.Yes)
-                {
                     File.Delete(newpath);
-                }
-                else return;
+                else 
+                    return;
             }
 
             File.Copy(tb.Text, newpath);

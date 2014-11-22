@@ -1,4 +1,4 @@
-﻿(None)
+﻿———
 Pound
 Karate Chop
 Double Slap
@@ -616,3 +616,7 @@ Thousand Arrows
 Thousand Waves
 Land’s Wrath
 Light of Ruin
+Origin Pulse
+Precipice Blades
+Dragon Ascent
+Hyperspace Fury

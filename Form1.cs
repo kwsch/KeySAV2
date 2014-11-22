@@ -330,8 +330,7 @@ namespace KeySAV2
             var dloc = new byte[] { 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0 };
             uint sv = (((ec & 0x3E000) >> 0xD) % 24);
 
-            int dlocation = dloc[sv];
-            return dlocation;
+            return dloc[sv];
         }
         private bool verifyCHK(byte[] pkx)
         {

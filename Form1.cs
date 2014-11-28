@@ -1966,7 +1966,7 @@ namespace KeySAV2
             string[] stringdata = new string[rawlist.Count];
             for (int i = 0; i < rawlist.Count; i++)
             {
-                stringdata[i] = rawlist[i];
+                stringdata[i] = rawlist[i].Trim();
             }
             return stringdata;
         }

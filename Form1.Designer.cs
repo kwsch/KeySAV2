@@ -341,6 +341,24 @@
             // CB_HP_Type
             // 
             this.CB_HP_Type.FormattingEnabled = true;
+            this.CB_HP_Type.Items.AddRange(new object[] {
+            "Any",
+            "Fighting",
+            "Flying",
+            "Poison",
+            "Ground",
+            "Rock",
+            "Bug",
+            "Ghost",
+            "Steel",
+            "Fire",
+            "Water",
+            "Grass",
+            "Electric",
+            "Psychic",
+            "Ice",
+            "Dragon",
+            "Dark"});
             this.CB_HP_Type.Location = new System.Drawing.Point(195, 14);
             this.CB_HP_Type.Name = "CB_HP_Type";
             this.CB_HP_Type.Size = new System.Drawing.Size(115, 21);

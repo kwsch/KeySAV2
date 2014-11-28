@@ -40,6 +40,15 @@
             this.TB_BV = new System.Windows.Forms.TextBox();
             this.RTB_VID = new System.Windows.Forms.RichTextBox();
             this.Tab_SAV = new System.Windows.Forms.TabPage();
+            this.GB_Filter = new System.Windows.Forms.GroupBox();
+            this.CHKL_Missing_IVs = new System.Windows.Forms.CheckedListBox();
+            this.CHK_Special_Attacker = new System.Windows.Forms.CheckBox();
+            this.CHK_Trickroom = new System.Windows.Forms.CheckBox();
+            this.CB_No_IVs = new System.Windows.Forms.ComboBox();
+            this.L_No_IVs = new System.Windows.Forms.Label();
+            this.L_HP_Type = new System.Windows.Forms.Label();
+            this.CB_HP_Type = new System.Windows.Forms.ComboBox();
+            this.CHK_Enable_Filtering = new System.Windows.Forms.CheckBox();
             this.B_BKP_SAV = new System.Windows.Forms.Button();
             this.L_SAVStats = new System.Windows.Forms.Label();
             this.L_BoxThru = new System.Windows.Forms.Label();
@@ -78,9 +87,16 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
+            this.RAD_IVs_Miss = new System.Windows.Forms.RadioButton();
+            this.RAD_IVs = new System.Windows.Forms.RadioButton();
+            this.CHK_Is_Shiny = new System.Windows.Forms.CheckBox();
+            this.CHK_Hatches_Shiny_For_Me = new System.Windows.Forms.CheckBox();
+            this.CHK_Hatches_Shiny_For = new System.Windows.Forms.CheckBox();
+            this.TB_SVs = new System.Windows.Forms.TextBox();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
+            this.GB_Filter.SuspendLayout();
             this.Tab_Options.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -97,7 +113,7 @@
             this.tab_Main.Location = new System.Drawing.Point(12, 12);
             this.tab_Main.Name = "tab_Main";
             this.tab_Main.SelectedIndex = 0;
-            this.tab_Main.Size = new System.Drawing.Size(330, 372);
+            this.tab_Main.Size = new System.Drawing.Size(330, 448);
             this.tab_Main.TabIndex = 3;
             // 
             // Tab_BV
@@ -113,7 +129,7 @@
             this.Tab_BV.Location = new System.Drawing.Point(4, 22);
             this.Tab_BV.Name = "Tab_BV";
             this.Tab_BV.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_BV.Size = new System.Drawing.Size(322, 346);
+            this.Tab_BV.Size = new System.Drawing.Size(322, 422);
             this.Tab_BV.TabIndex = 0;
             this.Tab_BV.Text = "BV";
             this.Tab_BV.UseVisualStyleBackColor = true;
@@ -199,13 +215,14 @@
             this.RTB_VID.Location = new System.Drawing.Point(0, 77);
             this.RTB_VID.Name = "RTB_VID";
             this.RTB_VID.ReadOnly = true;
-            this.RTB_VID.Size = new System.Drawing.Size(320, 265);
+            this.RTB_VID.Size = new System.Drawing.Size(320, 341);
             this.RTB_VID.TabIndex = 31;
             this.RTB_VID.Text = "";
             this.RTB_VID.WordWrap = false;
             // 
             // Tab_SAV
             // 
+            this.Tab_SAV.Controls.Add(this.GB_Filter);
             this.Tab_SAV.Controls.Add(this.B_BKP_SAV);
             this.Tab_SAV.Controls.Add(this.L_SAVStats);
             this.Tab_SAV.Controls.Add(this.L_BoxThru);
@@ -220,10 +237,124 @@
             this.Tab_SAV.Location = new System.Drawing.Point(4, 22);
             this.Tab_SAV.Name = "Tab_SAV";
             this.Tab_SAV.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_SAV.Size = new System.Drawing.Size(322, 346);
+            this.Tab_SAV.Size = new System.Drawing.Size(322, 422);
             this.Tab_SAV.TabIndex = 1;
             this.Tab_SAV.Text = "SAV";
             this.Tab_SAV.UseVisualStyleBackColor = true;
+            // 
+            // GB_Filter
+            // 
+            this.GB_Filter.Controls.Add(this.TB_SVs);
+            this.GB_Filter.Controls.Add(this.CHK_Hatches_Shiny_For);
+            this.GB_Filter.Controls.Add(this.CHK_Hatches_Shiny_For_Me);
+            this.GB_Filter.Controls.Add(this.CHK_Is_Shiny);
+            this.GB_Filter.Controls.Add(this.RAD_IVs);
+            this.GB_Filter.Controls.Add(this.RAD_IVs_Miss);
+            this.GB_Filter.Controls.Add(this.CHKL_Missing_IVs);
+            this.GB_Filter.Controls.Add(this.CHK_Special_Attacker);
+            this.GB_Filter.Controls.Add(this.CHK_Trickroom);
+            this.GB_Filter.Controls.Add(this.CB_No_IVs);
+            this.GB_Filter.Controls.Add(this.L_No_IVs);
+            this.GB_Filter.Controls.Add(this.L_HP_Type);
+            this.GB_Filter.Controls.Add(this.CB_HP_Type);
+            this.GB_Filter.Controls.Add(this.CHK_Enable_Filtering);
+            this.GB_Filter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.GB_Filter.Location = new System.Drawing.Point(3, 77);
+            this.GB_Filter.Name = "GB_Filter";
+            this.GB_Filter.Size = new System.Drawing.Size(316, 166);
+            this.GB_Filter.TabIndex = 31;
+            this.GB_Filter.TabStop = false;
+            this.GB_Filter.Text = "Filtering";
+            // 
+            // CHKL_Missing_IVs
+            // 
+            this.CHKL_Missing_IVs.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.CHKL_Missing_IVs.ColumnWidth = 74;
+            this.CHKL_Missing_IVs.FormattingEnabled = true;
+            this.CHKL_Missing_IVs.Items.AddRange(new object[] {
+            "HP",
+            "Atk",
+            "Def",
+            "Sp. Atk",
+            "Sp. Def",
+            "Spe"});
+            this.CHKL_Missing_IVs.Location = new System.Drawing.Point(135, 70);
+            this.CHKL_Missing_IVs.MultiColumn = true;
+            this.CHKL_Missing_IVs.Name = "CHKL_Missing_IVs";
+            this.CHKL_Missing_IVs.Size = new System.Drawing.Size(175, 45);
+            this.CHKL_Missing_IVs.TabIndex = 8;
+            // 
+            // CHK_Special_Attacker
+            // 
+            this.CHK_Special_Attacker.AutoSize = true;
+            this.CHK_Special_Attacker.Location = new System.Drawing.Point(209, 41);
+            this.CHK_Special_Attacker.Name = "CHK_Special_Attacker";
+            this.CHK_Special_Attacker.Size = new System.Drawing.Size(104, 17);
+            this.CHK_Special_Attacker.TabIndex = 6;
+            this.CHK_Special_Attacker.Text = "Special Attacker";
+            this.CHK_Special_Attacker.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Trickroom
+            // 
+            this.CHK_Trickroom.AutoSize = true;
+            this.CHK_Trickroom.Location = new System.Drawing.Point(135, 41);
+            this.CHK_Trickroom.Name = "CHK_Trickroom";
+            this.CHK_Trickroom.Size = new System.Drawing.Size(73, 17);
+            this.CHK_Trickroom.TabIndex = 5;
+            this.CHK_Trickroom.Text = "Trickroom";
+            this.CHK_Trickroom.UseVisualStyleBackColor = true;
+            // 
+            // CB_No_IVs
+            // 
+            this.CB_No_IVs.FormattingEnabled = true;
+            this.CB_No_IVs.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.CB_No_IVs.Location = new System.Drawing.Point(93, 39);
+            this.CB_No_IVs.Name = "CB_No_IVs";
+            this.CB_No_IVs.Size = new System.Drawing.Size(32, 21);
+            this.CB_No_IVs.TabIndex = 4;
+            // 
+            // L_No_IVs
+            // 
+            this.L_No_IVs.AutoSize = true;
+            this.L_No_IVs.Location = new System.Drawing.Point(1, 42);
+            this.L_No_IVs.Name = "L_No_IVs";
+            this.L_No_IVs.Size = new System.Drawing.Size(90, 13);
+            this.L_No_IVs.TabIndex = 3;
+            this.L_No_IVs.Text = "No. of perfect IVs";
+            // 
+            // L_HP_Type
+            // 
+            this.L_HP_Type.AutoSize = true;
+            this.L_HP_Type.Location = new System.Drawing.Point(132, 17);
+            this.L_HP_Type.Name = "L_HP_Type";
+            this.L_HP_Type.Size = new System.Drawing.Size(49, 13);
+            this.L_HP_Type.TabIndex = 2;
+            this.L_HP_Type.Text = "HP Type";
+            // 
+            // CB_HP_Type
+            // 
+            this.CB_HP_Type.FormattingEnabled = true;
+            this.CB_HP_Type.Location = new System.Drawing.Point(195, 14);
+            this.CB_HP_Type.Name = "CB_HP_Type";
+            this.CB_HP_Type.Size = new System.Drawing.Size(115, 21);
+            this.CB_HP_Type.TabIndex = 1;
+            // 
+            // CHK_Enable_Filtering
+            // 
+            this.CHK_Enable_Filtering.AutoSize = true;
+            this.CHK_Enable_Filtering.Location = new System.Drawing.Point(5, 16);
+            this.CHK_Enable_Filtering.Name = "CHK_Enable_Filtering";
+            this.CHK_Enable_Filtering.Size = new System.Drawing.Size(95, 17);
+            this.CHK_Enable_Filtering.TabIndex = 0;
+            this.CHK_Enable_Filtering.Text = "Enable filtering";
+            this.CHK_Enable_Filtering.UseVisualStyleBackColor = true;
             // 
             // B_BKP_SAV
             // 
@@ -336,10 +467,10 @@
             this.RTB_SAV.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RTB_SAV.Location = new System.Drawing.Point(0, 77);
+            this.RTB_SAV.Location = new System.Drawing.Point(0, 249);
             this.RTB_SAV.Name = "RTB_SAV";
             this.RTB_SAV.ReadOnly = true;
-            this.RTB_SAV.Size = new System.Drawing.Size(320, 265);
+            this.RTB_SAV.Size = new System.Drawing.Size(320, 170);
             this.RTB_SAV.TabIndex = 30;
             this.RTB_SAV.Text = "";
             this.RTB_SAV.WordWrap = false;
@@ -711,12 +842,71 @@
             this.CB_Game.TabIndex = 2;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
             // 
+            // RAD_IVs_Miss
+            // 
+            this.RAD_IVs_Miss.AutoSize = true;
+            this.RAD_IVs_Miss.Checked = true;
+            this.RAD_IVs_Miss.Location = new System.Drawing.Point(6, 70);
+            this.RAD_IVs_Miss.Name = "RAD_IVs_Miss";
+            this.RAD_IVs_Miss.Size = new System.Drawing.Size(85, 17);
+            this.RAD_IVs_Miss.TabIndex = 9;
+            this.RAD_IVs_Miss.TabStop = true;
+            this.RAD_IVs_Miss.Text = "IVs may miss";
+            this.RAD_IVs_Miss.UseVisualStyleBackColor = true;
+            // 
+            // RAD_IVs
+            // 
+            this.RAD_IVs.AutoSize = true;
+            this.RAD_IVs.Location = new System.Drawing.Point(6, 93);
+            this.RAD_IVs.Name = "RAD_IVs";
+            this.RAD_IVs.Size = new System.Drawing.Size(96, 17);
+            this.RAD_IVs.TabIndex = 10;
+            this.RAD_IVs.Text = "IVs musn\'t miss";
+            this.RAD_IVs.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Is_Shiny
+            // 
+            this.CHK_Is_Shiny.AutoSize = true;
+            this.CHK_Is_Shiny.Location = new System.Drawing.Point(6, 121);
+            this.CHK_Is_Shiny.Name = "CHK_Is_Shiny";
+            this.CHK_Is_Shiny.Size = new System.Drawing.Size(61, 17);
+            this.CHK_Is_Shiny.TabIndex = 11;
+            this.CHK_Is_Shiny.Text = "Is shiny";
+            this.CHK_Is_Shiny.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Hatches_Shiny_For_Me
+            // 
+            this.CHK_Hatches_Shiny_For_Me.AutoSize = true;
+            this.CHK_Hatches_Shiny_For_Me.Location = new System.Drawing.Point(135, 121);
+            this.CHK_Hatches_Shiny_For_Me.Name = "CHK_Hatches_Shiny_For_Me";
+            this.CHK_Hatches_Shiny_For_Me.Size = new System.Drawing.Size(125, 17);
+            this.CHK_Hatches_Shiny_For_Me.TabIndex = 12;
+            this.CHK_Hatches_Shiny_For_Me.Text = "Hatches shiny for me";
+            this.CHK_Hatches_Shiny_For_Me.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Hatches_Shiny_For
+            // 
+            this.CHK_Hatches_Shiny_For.AutoSize = true;
+            this.CHK_Hatches_Shiny_For.Location = new System.Drawing.Point(6, 144);
+            this.CHK_Hatches_Shiny_For.Name = "CHK_Hatches_Shiny_For";
+            this.CHK_Hatches_Shiny_For.Size = new System.Drawing.Size(108, 17);
+            this.CHK_Hatches_Shiny_For.TabIndex = 13;
+            this.CHK_Hatches_Shiny_For.Text = "Hatches shiny for";
+            this.CHK_Hatches_Shiny_For.UseVisualStyleBackColor = true;
+            // 
+            // TB_SVs
+            // 
+            this.TB_SVs.Location = new System.Drawing.Point(135, 142);
+            this.TB_SVs.Name = "TB_SVs";
+            this.TB_SVs.Size = new System.Drawing.Size(175, 20);
+            this.TB_SVs.TabIndex = 14;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 391);
+            this.ClientSize = new System.Drawing.Size(354, 467);
             this.Controls.Add(this.CB_Game);
             this.Controls.Add(this.CB_MainLanguage);
             this.Controls.Add(this.tab_Main);
@@ -731,6 +921,8 @@
             this.Tab_BV.PerformLayout();
             this.Tab_SAV.ResumeLayout(false);
             this.Tab_SAV.PerformLayout();
+            this.GB_Filter.ResumeLayout(false);
+            this.GB_Filter.PerformLayout();
             this.Tab_Options.ResumeLayout(false);
             this.Tab_Options.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -790,6 +982,21 @@
         private System.Windows.Forms.Button B_Folder;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button B_BreakFolder;
+        private System.Windows.Forms.GroupBox GB_Filter;
+        private System.Windows.Forms.Label L_HP_Type;
+        private System.Windows.Forms.ComboBox CB_HP_Type;
+        private System.Windows.Forms.CheckBox CHK_Enable_Filtering;
+        private System.Windows.Forms.CheckBox CHK_Trickroom;
+        private System.Windows.Forms.ComboBox CB_No_IVs;
+        private System.Windows.Forms.Label L_No_IVs;
+        private System.Windows.Forms.CheckedListBox CHKL_Missing_IVs;
+        private System.Windows.Forms.CheckBox CHK_Special_Attacker;
+        private System.Windows.Forms.RadioButton RAD_IVs;
+        private System.Windows.Forms.RadioButton RAD_IVs_Miss;
+        private System.Windows.Forms.TextBox TB_SVs;
+        private System.Windows.Forms.CheckBox CHK_Hatches_Shiny_For;
+        private System.Windows.Forms.CheckBox CHK_Hatches_Shiny_For_Me;
+        private System.Windows.Forms.CheckBox CHK_Is_Shiny;
 
     }
 }

@@ -32,7 +32,8 @@ namespace KeySAV2
             myTimer.Start();
             CB_Game.SelectedIndex = 0;
             CB_MainLanguage.SelectedIndex = 0;
-            CB_BoxStart.SelectedIndex = 0;
+            CB_BoxStart.SelectedIndex = 1;
+            changeboxsetting(null, null);
             CB_Team.SelectedIndex = 0;
             CB_ExportStyle.SelectedIndex = 0;
             CB_BoxColor.SelectedIndex = 0;
@@ -416,8 +417,6 @@ namespace KeySAV2
             Array.Resize(ref empty, 0xE8);
             scanSAV(savefile, key, empty);
             File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
-            CB_BoxStart.SelectedIndex = 1; // Select Box 1 instead of All... for simplicity's sake.
-            changeboxsetting(null, null);
         }
         private void openVID(string path)
         {
@@ -1689,10 +1688,11 @@ namespace KeySAV2
             if (CB_BoxEnd.Enabled)
             {
                 int start = Convert.ToInt16(CB_BoxStart.Text);
+                int oldValue = Convert.ToInt16(CB_BoxEnd.SelectedItem);
                 CB_BoxEnd.Items.Clear();
                 for (int i = start; i < 32; i++)
                     CB_BoxEnd.Items.Add(i.ToString());
-                CB_BoxEnd.SelectedIndex = 0;
+                CB_BoxEnd.SelectedIndex = (start >= oldValue ? 0 : oldValue-start);
             }
         }
         private void B_ShowOptions_Click(object sender, EventArgs e)

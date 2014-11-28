@@ -2130,6 +2130,7 @@ namespace KeySAV2
                 scanSAV(savefile, key, empty, false);
                 File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
             }
+            MessageBox.Show("Processed all files in folder...");
         }
     }
 }

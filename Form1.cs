@@ -739,7 +739,7 @@ namespace KeySAV2
             slots = 0;
             int boxoffset = BitConverter.ToInt32(keystream, 0x1C);
             for (int i = 0; i < 930; i++)
-                fetchpkx(savefile, keystream, boxoffset + i * 232, 0x100 + i * 232, 0x40000 + i * 232, blank);
+                fetchpkx(input, keystream, boxoffset + i * 232, 0x100 + i * 232, 0x40000 + i * 232, blank);
 
             if(setLable)
                 L_SAVStats.Text = String.Format("{0}/930", slots);

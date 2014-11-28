@@ -734,14 +734,15 @@ namespace KeySAV2
                 return null;
             }
         }
-        private void scanSAV(byte[] input, byte[] keystream, byte[] blank)
+        private void scanSAV(byte[] input, byte[] keystream, byte[] blank, bool setLable = true)
         {
             slots = 0;
             int boxoffset = BitConverter.ToInt32(keystream, 0x1C);
             for (int i = 0; i < 930; i++)
                 fetchpkx(savefile, keystream, boxoffset + i * 232, 0x100 + i * 232, 0x40000 + i * 232, blank);
 
-            L_SAVStats.Text = String.Format("{0}/930", slots);
+            if(setLable)
+                L_SAVStats.Text = String.Format("{0}/930", slots);
             //MessageBox.Show("Unlocked: " + unlockedslots + " Soft: " + softslots);
         }
         private void dumpPKX_SAV(byte[] pkx, int dumpnum, int dumpstart)
@@ -1213,6 +1214,17 @@ namespace KeySAV2
             }
             togglebreak();
         }
+
+        private void loadBreakFolder(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folder = new FolderBrowserDialog();
+            if (folder.ShowDialog() == DialogResult.OK)
+            {
+                TB_Folder.Text = folder.SelectedPath;
+                B_BreakFolder.Enabled = true;
+            }
+        }
+
         private void togglebreak()
         {
             B_Break.Enabled = false;
@@ -2215,5 +2227,60 @@ namespace KeySAV2
             File.Copy(tb.Text, newpath);
             MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
         }
+
+        private void B_BreakFolder_Click(object sender, EventArgs e)
+        {
+            byte[] savefile = new byte[0x100000];
+            string savkeypath;
+            foreach (string path in Directory.GetFiles(TB_Folder.Text))
+            {
+                // check to see if good input file
+                long len = new FileInfo(path).Length;
+                if (len != 0x100000 && len != 0x10009C)
+                {
+                    continue;
+                }
+
+                // Go ahead and load the save file into RAM...
+                byte[] input = File.ReadAllBytes(path);
+                Array.Copy(input, input.Length % 0x100000, savefile, 0, 0x100000);
+                // Fetch Stamp
+                ulong stamp = BitConverter.ToUInt64(savefile, 0x10);
+                string keyfile = fetchKey(stamp, 0x80000);
+                if (keyfile == "")
+                {
+                    continue;
+                }
+                else
+                {
+                    savkeypath = keyfile;
+                }
+
+                byte[] key = File.ReadAllBytes(keyfile);
+                byte[] empty = new Byte[232];
+                // Save file is already loaded.
+
+                // Get our empty file set up.
+                Array.Copy(key, 0x10, empty, 0xE0, 0x4);
+                string nick = eggnames[empty[0xE3] - 1];
+                // Stuff in the nickname to our blank EKX.
+                byte[] nicknamebytes = Encoding.Unicode.GetBytes(nick);
+                Array.Resize(ref nicknamebytes, 24);
+                Array.Copy(nicknamebytes, 0, empty, 0x40, nicknamebytes.Length);
+                // Fix CHK
+                uint chk = 0;
+                for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
+                {
+                    chk += BitConverter.ToUInt16(empty, i);
+                }
+                // Apply New Checksum
+                Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
+                empty = encryptArray(empty);
+                Array.Resize(ref empty, 0xE8);
+                scanSAV(savefile, key, empty, false);
+                File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
+            }
+        }
+
     }
 }

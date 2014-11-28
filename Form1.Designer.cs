@@ -61,6 +61,10 @@
             this.CHK_Split = new System.Windows.Forms.CheckBox();
             this.CHK_BoldIVs = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.B_BreakFolder = new System.Windows.Forms.Button();
+            this.TB_Folder = new System.Windows.Forms.TextBox();
+            this.B_Folder = new System.Windows.Forms.Button();
             this.L_instrSAV = new System.Windows.Forms.Label();
             this.L_instrBV = new System.Windows.Forms.Label();
             this.B_Break = new System.Windows.Forms.Button();
@@ -93,7 +97,7 @@
             this.tab_Main.Location = new System.Drawing.Point(12, 12);
             this.tab_Main.Name = "tab_Main";
             this.tab_Main.SelectedIndex = 0;
-            this.tab_Main.Size = new System.Drawing.Size(330, 313);
+            this.tab_Main.Size = new System.Drawing.Size(330, 372);
             this.tab_Main.TabIndex = 3;
             // 
             // Tab_BV
@@ -109,7 +113,7 @@
             this.Tab_BV.Location = new System.Drawing.Point(4, 22);
             this.Tab_BV.Name = "Tab_BV";
             this.Tab_BV.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_BV.Size = new System.Drawing.Size(322, 287);
+            this.Tab_BV.Size = new System.Drawing.Size(322, 346);
             this.Tab_BV.TabIndex = 0;
             this.Tab_BV.Text = "BV";
             this.Tab_BV.UseVisualStyleBackColor = true;
@@ -195,7 +199,7 @@
             this.RTB_VID.Location = new System.Drawing.Point(0, 77);
             this.RTB_VID.Name = "RTB_VID";
             this.RTB_VID.ReadOnly = true;
-            this.RTB_VID.Size = new System.Drawing.Size(320, 210);
+            this.RTB_VID.Size = new System.Drawing.Size(320, 265);
             this.RTB_VID.TabIndex = 31;
             this.RTB_VID.Text = "";
             this.RTB_VID.WordWrap = false;
@@ -216,7 +220,7 @@
             this.Tab_SAV.Location = new System.Drawing.Point(4, 22);
             this.Tab_SAV.Name = "Tab_SAV";
             this.Tab_SAV.Padding = new System.Windows.Forms.Padding(3);
-            this.Tab_SAV.Size = new System.Drawing.Size(322, 287);
+            this.Tab_SAV.Size = new System.Drawing.Size(322, 346);
             this.Tab_SAV.TabIndex = 1;
             this.Tab_SAV.Text = "SAV";
             this.Tab_SAV.UseVisualStyleBackColor = true;
@@ -335,7 +339,7 @@
             this.RTB_SAV.Location = new System.Drawing.Point(0, 77);
             this.RTB_SAV.Name = "RTB_SAV";
             this.RTB_SAV.ReadOnly = true;
-            this.RTB_SAV.Size = new System.Drawing.Size(320, 210);
+            this.RTB_SAV.Size = new System.Drawing.Size(320, 265);
             this.RTB_SAV.TabIndex = 30;
             this.RTB_SAV.Text = "";
             this.RTB_SAV.WordWrap = false;
@@ -388,7 +392,7 @@
             this.Tab_Options.Controls.Add(this.RTB_OPTIONS);
             this.Tab_Options.Location = new System.Drawing.Point(4, 22);
             this.Tab_Options.Name = "Tab_Options";
-            this.Tab_Options.Size = new System.Drawing.Size(322, 287);
+            this.Tab_Options.Size = new System.Drawing.Size(322, 346);
             this.Tab_Options.TabIndex = 2;
             this.Tab_Options.Text = "Options";
             this.Tab_Options.UseVisualStyleBackColor = true;
@@ -491,6 +495,10 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.B_BreakFolder);
+            this.groupBox1.Controls.Add(this.TB_Folder);
+            this.groupBox1.Controls.Add(this.B_Folder);
             this.groupBox1.Controls.Add(this.L_instrSAV);
             this.groupBox1.Controls.Add(this.L_instrBV);
             this.groupBox1.Controls.Add(this.B_Break);
@@ -500,10 +508,51 @@
             this.groupBox1.Controls.Add(this.TB_File1);
             this.groupBox1.Location = new System.Drawing.Point(1, 191);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(320, 95);
+            this.groupBox1.Size = new System.Drawing.Size(320, 154);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Breaker";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(10, 105);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(217, 13);
+            this.label2.TabIndex = 32;
+            this.label2.Text = "Improve any keys with saves from this folder:";
+            // 
+            // B_BreakFolder
+            // 
+            this.B_BreakFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.B_BreakFolder.Enabled = false;
+            this.B_BreakFolder.Location = new System.Drawing.Point(239, 100);
+            this.B_BreakFolder.Name = "B_BreakFolder";
+            this.B_BreakFolder.Size = new System.Drawing.Size(75, 23);
+            this.B_BreakFolder.TabIndex = 31;
+            this.B_BreakFolder.Text = "Break";
+            this.B_BreakFolder.UseVisualStyleBackColor = true;
+            this.B_BreakFolder.Click += new System.EventHandler(this.B_BreakFolder_Click);
+            // 
+            // TB_Folder
+            // 
+            this.TB_Folder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_Folder.Location = new System.Drawing.Point(85, 130);
+            this.TB_Folder.Name = "TB_Folder";
+            this.TB_Folder.ReadOnly = true;
+            this.TB_Folder.Size = new System.Drawing.Size(229, 20);
+            this.TB_Folder.TabIndex = 30;
+            // 
+            // B_Folder
+            // 
+            this.B_Folder.Location = new System.Drawing.Point(5, 129);
+            this.B_Folder.Name = "B_Folder";
+            this.B_Folder.Size = new System.Drawing.Size(75, 23);
+            this.B_Folder.TabIndex = 29;
+            this.B_Folder.Text = "Folder";
+            this.B_Folder.UseVisualStyleBackColor = true;
+            this.B_Folder.Click += new System.EventHandler(this.loadBreakFolder);
             // 
             // L_instrSAV
             // 
@@ -527,7 +576,7 @@
             // 
             this.B_Break.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.B_Break.Enabled = false;
-            this.B_Break.Location = new System.Drawing.Point(238, 17);
+            this.B_Break.Location = new System.Drawing.Point(239, 17);
             this.B_Break.Name = "B_Break";
             this.B_Break.Size = new System.Drawing.Size(75, 23);
             this.B_Break.TabIndex = 28;
@@ -667,7 +716,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(354, 332);
+            this.ClientSize = new System.Drawing.Size(354, 391);
             this.Controls.Add(this.CB_Game);
             this.Controls.Add(this.CB_MainLanguage);
             this.Controls.Add(this.tab_Main);
@@ -737,6 +786,10 @@
         private System.Windows.Forms.CheckBox CHK_HideFirst;
         private System.Windows.Forms.Label L_instrSAV;
         private System.Windows.Forms.Label L_instrBV;
+        private System.Windows.Forms.TextBox TB_Folder;
+        private System.Windows.Forms.Button B_Folder;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button B_BreakFolder;
 
     }
 }

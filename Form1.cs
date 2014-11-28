@@ -348,6 +348,9 @@ namespace KeySAV2
         private void B_OpenSAV_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.InitialDirectory = savpath;
+            ofd.RestoreDirectory = true;
             ofd.Filter = "SAV|*.sav;*.bin";
             if (ofd.ShowDialog() == DialogResult.OK)
                 openSAV(ofd.FileName);
@@ -1616,13 +1619,13 @@ namespace KeySAV2
                 {
                     // OR
                     savpath = path_3DS + "\\title\\00040000\\0011c400\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\0011c400\\00000000\\";
+                    vidpath = path_3DS + "\\extdata\\00000000\\000011c4\\00000000\\";
                 }
                 else if (game == 3)
                 {
                     // AS
                     savpath = path_3DS + "\\title\\00040000\\0011c500\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\0011c500\\00000000\\";
+                    vidpath = path_3DS + "\\extdata\\00000000\\000011c5\\00000000\\";
                 }
 
                 if (Directory.Exists(savpath))
@@ -1838,7 +1841,7 @@ namespace KeySAV2
 
             string[] stringdata = new string[rawlist.Count];
             for (int i = 0; i < rawlist.Count; i++)
-                stringdata[i] = rawlist[i];
+                stringdata[i] = rawlist[i].Trim();
             return stringdata;
         }
         private void InitializeStrings()
@@ -2053,7 +2056,6 @@ namespace KeySAV2
             File.Copy(tb.Text, newpath);
             MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
         }
-
         private void B_BKP_BV_Click(object sender, EventArgs e)
         {
             TextBox tb = TB_BV;
@@ -2091,9 +2093,7 @@ namespace KeySAV2
                 // check to see if good input file
                 long len = new FileInfo(path).Length;
                 if (len != 0x100000 && len != 0x10009C)
-                {
                     continue;
-                }
 
                 // Go ahead and load the save file into RAM...
                 byte[] input = File.ReadAllBytes(path);
@@ -2102,13 +2102,9 @@ namespace KeySAV2
                 ulong stamp = BitConverter.ToUInt64(savefile, 0x10);
                 string keyfile = fetchKey(stamp, 0x80000);
                 if (keyfile == "")
-                {
                     continue;
-                }
                 else
-                {
                     savkeypath = keyfile;
-                }
 
                 byte[] key = File.ReadAllBytes(keyfile);
                 byte[] empty = new Byte[232];
@@ -2121,12 +2117,12 @@ namespace KeySAV2
                 byte[] nicknamebytes = Encoding.Unicode.GetBytes(nick);
                 Array.Resize(ref nicknamebytes, 24);
                 Array.Copy(nicknamebytes, 0, empty, 0x40, nicknamebytes.Length);
+
                 // Fix CHK
                 uint chk = 0;
                 for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
-                {
                     chk += BitConverter.ToUInt16(empty, i);
-                }
+
                 // Apply New Checksum
                 Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
                 empty = encryptArray(empty);
@@ -2135,6 +2131,5 @@ namespace KeySAV2
                 File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
             }
         }
-
     }
 }

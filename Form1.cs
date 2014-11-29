@@ -763,10 +763,10 @@ namespace KeySAV2
 
                 if (CHK_Is_Shiny.Checked || CHK_Hatches_Shiny_For_Me.Checked || CHK_Hatches_Shiny_For.Checked)
                 {
-                    short[] acceptedTSVs = (TB_SVs.Text != "" ? Array.ConvertAll(TB_SVs.Text.Split(','), Convert.ToInt16) : new short[0]); 
-                    if (!(!CHK_Is_Shiny.Checked || CHK_Is_Shiny.Checked && data.isshiny ||
+                    ushort[] acceptedTSVs = (TB_SVs.Text != "" ? Array.ConvertAll(TB_SVs.Text.Split(','), Convert.ToUInt16) : new ushort[0]); 
+                    if (!(CHK_Is_Shiny.Checked && data.isshiny ||
                         data.isegg && CHK_Hatches_Shiny_For_Me.Checked && ESV == TSV ||
-                        data.isegg && CHK_Hatches_Shiny_For.Checked && Array.IndexOf(acceptedTSVs, ESV) > -1))
+                        data.isegg && CHK_Hatches_Shiny_For.Checked && Array.IndexOf(acceptedTSVs, data.ESV) > -1))
                     { statisfiesFilters = false; break; }
                 }
 

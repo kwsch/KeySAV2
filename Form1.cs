@@ -118,6 +118,7 @@ namespace KeySAV2
         public int dumpedcounter = 0;
         private int slots = 0;
         public bool ghost = false;
+        private ushort[] selectedTSVs = new ushort[0];
 
         // Breaking Usage
         public string file1 = "";
@@ -777,10 +778,9 @@ namespace KeySAV2
                 if (CHK_Is_Shiny.Checked || CHK_Hatches_Shiny_For_Me.Checked || CHK_Hatches_Shiny_For.Checked)
                 {
                     // TODO: Should probably cache this somewhere...
-                    ushort[] acceptedTSVs = (TB_SVs.Text != "" ? Array.ConvertAll(TB_SVs.Text.Split(','), Convert.ToUInt16) : new ushort[0]); 
                     if (!(CHK_Is_Shiny.Checked && data.isshiny ||
                         data.isegg && CHK_Hatches_Shiny_For_Me.Checked && ESV == TSV ||
-                        data.isegg && CHK_Hatches_Shiny_For.Checked && Array.IndexOf(acceptedTSVs, data.ESV) > -1))
+                        data.isegg && CHK_Hatches_Shiny_For.Checked && Array.IndexOf(selectedTSVs, data.ESV) > -1))
                     { statisfiesFilters = false; break; }
                 }
 
@@ -882,6 +882,10 @@ namespace KeySAV2
                 count = (Convert.ToInt16(CB_BoxEnd.Text) - Convert.ToInt16(CB_BoxStart.Text) + 1) * 30;
                 boxstart = Convert.ToInt16(CB_BoxStart.Text);
             }
+
+            // Get our TSVs for filtering
+            ushort tmp = 0;
+            selectedTSVs = (from val in Regex.Split(TB_SVs.Text, @"\s*[\s,;.]\s*") where UInt16.TryParse(val, out tmp) select tmp).ToArray();
 
             string header = String.Format(RTB_OPTIONS.Text, "Box", "Slot", "Species", "Gender", "Nature", "Ability", "HP", "ATK", "DEF", "SPA", "SPD", "SPE", "HiddenPower", "ESV", "TSV", "Nick", "OT", "Ball", "TID", "SID", "HP EV", "ATK EV", "DEF EV", "SPA EV", "SPD EV", "SPE EV", "Move 1", "Move 2", "Move 3", "Move 4", "Relearn 1", "Relearn 2", "Relearn 3", "Relearn 4", "Shiny", "Egg");
             if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked))

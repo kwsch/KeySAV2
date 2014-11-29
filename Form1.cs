@@ -34,9 +34,14 @@ namespace KeySAV2
             CB_MainLanguage.SelectedIndex = 0;
             CB_BoxStart.SelectedIndex = 1;
             changeboxsetting(null, null);
+            CB_BoxEnd.SelectedIndex = 0;
+            CB_BoxEnd.Enabled = false;
             CB_Team.SelectedIndex = 0;
             CB_ExportStyle.SelectedIndex = 0;
             CB_BoxColor.SelectedIndex = 0;
+            CB_HP_Type.SelectedIndex = 0;
+            CB_No_IVs.SelectedIndex = 0;
+            toggleFilter(null, null);
             loadINI();
             this.FormClosing += onFormClose;
             InitializeStrings();
@@ -113,6 +118,7 @@ namespace KeySAV2
         public int dumpedcounter = 0;
         private int slots = 0;
         public bool ghost = false;
+        private ushort[] selectedTSVs = new ushort[0];
 
         // Breaking Usage
         public string file1 = "";
@@ -741,55 +747,98 @@ namespace KeySAV2
             string isshiny = ""; if (data.isshiny) isshiny = "★";
             string isegg = ""; if (data.isegg) isegg = "✓";
 
-            if (!data.isegg) ESV = "";
+            bool statisfiesFilters = true;
 
-            // Vivillon Forms...
-            if (data.species >= 664 && data.species <= 666)
-                species += "-" + vivlist[data.altforms];
-
-            if (((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_BoldIVs.Checked))
+            while (CHK_Enable_Filtering.Checked)
             {
-                if (hp == "31") hp = "**31**";
-                if (atk == "31") atk = "**31**";
-                if (def == "31") def = "**31**";
-                if (spa == "31") spa = "**31**";
-                if (spd == "31") spd = "**31**";
-                if (spe == "31") spe = "**31**";
+                if (CHK_Egg.Checked && !data.isegg) { statisfiesFilters = false; break; }
+                bool checkHp = false;
+                if (CB_HP_Type.SelectedIndex > 0)
+                {
+                    if (CB_HP_Type.SelectedIndex != data.hptype) { statisfiesFilters = false; break; }
+                    checkHp = true;
+                }
+
+                int perfects = Convert.ToInt16(CB_No_IVs.SelectedItem);
+                bool ivsSelected = CHK_IV_HP.Checked || CHK_IV_Atk.Checked || CHK_IV_Def.Checked || CHK_IV_SpAtk.Checked || CHK_IV_SpDef.Checked || CHK_IV_Spe.Checked;
+                if (hp == "31" ||checkHp && hp == "30") --perfects;
+                else if (ivsSelected && CHK_IV_HP.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if ((atk == "31" || checkHp && atk == "30") && !CHK_Special_Attacker.Checked || (atk == "0" || checkHp && atk == "1") && CHK_Special_Attacker.Checked) --perfects;
+                else if (ivsSelected && CHK_IV_Atk.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if (def == "31" || checkHp && def == "30") --perfects;
+                else if (ivsSelected && CHK_IV_Def.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if (spa == "31" || checkHp && spa == "30") --perfects;
+                else if (ivsSelected && CHK_IV_SpAtk.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if (spd == "31" || checkHp && spd == "30") --perfects;
+                else if (ivsSelected && CHK_IV_SpDef.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if ((spe == "31" || checkHp && spe == "30") && !CHK_Trickroom.Checked || (spe == "0" || checkHp && spe == "1") && CHK_Trickroom.Checked) --perfects;
+                else if (ivsSelected && CHK_IV_Spe.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
+                if (perfects > 0) { statisfiesFilters = false; break; }
+
+                if (CHK_Is_Shiny.Checked || CHK_Hatches_Shiny_For_Me.Checked || CHK_Hatches_Shiny_For.Checked)
+                {
+                    // TODO: Should probably cache this somewhere...
+                    if (!(CHK_Is_Shiny.Checked && data.isshiny ||
+                        data.isegg && CHK_Hatches_Shiny_For_Me.Checked && ESV == TSV ||
+                        data.isegg && CHK_Hatches_Shiny_For.Checked && Array.IndexOf(selectedTSVs, data.ESV) > -1))
+                    { statisfiesFilters = false; break; }
+                }
+
+                break;
             }
 
-            string format = RTB_OPTIONS.Text;
-            if (CB_ExportStyle.SelectedIndex >= 6)
-                format = "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
-
-            if (CB_ExportStyle.SelectedIndex == 6)
+            if (statisfiesFilters)
             {
-                csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
-                    box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
-            }
-            if (CB_ExportStyle.SelectedIndex == 7)
-            {
-                isshiny = "";
-                if (data.isshiny)
-                    isshiny = " ★";
-                if (data.isnick)
-                    data.nicknamestr += String.Format(" ({0})", specieslist[data.species]);
+                if (!data.isegg) ESV = "";
 
-                string savedname =
-                    data.species.ToString("000") + isshiny + " - "
-                    + data.nicknamestr + " - "
-                    + data.chk.ToString("X4") + data.EC.ToString("X8");
-                File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
-            }
-            if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
-            {
-                if (ESV != "")
-                    ESV = "[" + ESV + "]";
-            }
-            string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
+                // Vivillon Forms...
+                if (data.species >= 664 && data.species <= 666)
+                    species += "-" + vivlist[data.altforms];
 
-            if (ghost && CHK_MarkFirst.Checked) result = "~" + result;
-            dumpedcounter++;
-            RTB_SAV.AppendText(result + "\r\n");
+                if (((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_BoldIVs.Checked))
+                {
+                    if (hp == "31") hp = "**31**";
+                    if (atk == "31") atk = "**31**";
+                    if (def == "31") def = "**31**";
+                    if (spa == "31") spa = "**31**";
+                    if (spd == "31") spd = "**31**";
+                    if (spe == "31") spe = "**31**";
+                }
+
+                string format = RTB_OPTIONS.Text;
+                if (CB_ExportStyle.SelectedIndex >= 6)
+                    format = "{0} - {1} - {2} ({3}) - {4} - {5} - {6}.{7}.{8}.{9}.{10}.{11} - {12} - {13}";
+
+                if (CB_ExportStyle.SelectedIndex == 6)
+                {
+                    csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
+                        box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
+                }
+                if (CB_ExportStyle.SelectedIndex == 7)
+                {
+                    isshiny = "";
+                    if (data.isshiny)
+                        isshiny = " ★";
+                    if (data.isnick)
+                        data.nicknamestr += String.Format(" ({0})", specieslist[data.species]);
+
+                    string savedname =
+                        data.species.ToString("000") + isshiny + " - "
+                        + data.nicknamestr + " - "
+                        + data.chk.ToString("X4") + data.EC.ToString("X8");
+                    File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
+                }
+                if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
+                {
+                    if (ESV != "")
+                        ESV = "[" + ESV + "]";
+                }
+                string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
+
+                if (ghost && CHK_MarkFirst.Checked) result = "~" + result;
+                dumpedcounter++;
+                RTB_SAV.AppendText(result + "\r\n");
+            }
         }
         private void DumpSAV(object sender, EventArgs e)
         {
@@ -833,6 +882,10 @@ namespace KeySAV2
                 count = (Convert.ToInt16(CB_BoxEnd.Text) - Convert.ToInt16(CB_BoxStart.Text) + 1) * 30;
                 boxstart = Convert.ToInt16(CB_BoxStart.Text);
             }
+
+            // Get our TSVs for filtering
+            ushort tmp = 0;
+            selectedTSVs = (from val in Regex.Split(TB_SVs.Text, @"\s*[\s,;.]\s*") where UInt16.TryParse(val, out tmp) select tmp).ToArray();
 
             string header = String.Format(RTB_OPTIONS.Text, "Box", "Slot", "Species", "Gender", "Nature", "Ability", "HP", "ATK", "DEF", "SPA", "SPD", "SPE", "HiddenPower", "ESV", "TSV", "Nick", "OT", "Ball", "TID", "SID", "HP EV", "ATK EV", "DEF EV", "SPA EV", "SPD EV", "SPE EV", "Move 1", "Move 2", "Move 3", "Move 4", "Relearn 1", "Relearn 2", "Relearn 3", "Relearn 4", "Shiny", "Egg");
             if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked))
@@ -1066,6 +1119,17 @@ namespace KeySAV2
                     System.IO.File.WriteAllText(path, csvdata, Encoding.UTF8);
                 }
             }
+        }
+
+        private void toggleFilter(object sender, EventArgs e)
+        {
+            CB_HP_Type.Enabled = CB_No_IVs.Enabled = CHK_Trickroom.Enabled =
+            CHK_Special_Attacker.Enabled = RAD_IVs_Miss.Enabled = RAD_IVs.Enabled =
+            CHK_IV_HP.Enabled = CHK_IV_Atk.Enabled = CHK_IV_Def.Enabled =
+            CHK_IV_SpAtk.Enabled = CHK_IV_SpDef.Enabled = CHK_IV_Spe.Enabled =
+            CHK_Is_Shiny.Enabled = CHK_Hatches_Shiny_For_Me.Enabled =
+            CHK_Hatches_Shiny_For.Enabled = TB_SVs.Enabled =
+            CHK_Egg.Enabled = CHK_Enable_Filtering.Checked;
         }
 
         // File Keystream Breaking

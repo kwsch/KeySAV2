@@ -37,6 +37,9 @@ namespace KeySAV2
             CB_Team.SelectedIndex = 0;
             CB_ExportStyle.SelectedIndex = 0;
             CB_BoxColor.SelectedIndex = 0;
+            CB_HP_Type.SelectedIndex = 0;
+            CB_No_IVs.SelectedIndex = 0;
+            toggleFilter(null, null);
             loadINI();
             this.FormClosing += onFormClose;
             InitializeStrings();
@@ -1109,6 +1112,17 @@ namespace KeySAV2
                     System.IO.File.WriteAllText(path, csvdata, Encoding.UTF8);
                 }
             }
+        }
+
+        private void toggleFilter(object sender, EventArgs e)
+        {
+            CB_HP_Type.Enabled = CB_No_IVs.Enabled = CHK_Trickroom.Enabled =
+            CHK_Special_Attacker.Enabled = RAD_IVs_Miss.Enabled = RAD_IVs.Enabled =
+            CHK_IV_HP.Enabled = CHK_IV_Atk.Enabled = CHK_IV_Def.Enabled =
+            CHK_IV_SpAtk.Enabled = CHK_IV_SpDef.Enabled = CHK_IV_Spe.Enabled =
+            CHK_Is_Shiny.Enabled = CHK_Hatches_Shiny_For_Me.Enabled =
+            CHK_Hatches_Shiny_For.Enabled = TB_SVs.Enabled =
+            CHK_Enable_Filtering.Checked;
         }
 
         // File Keystream Breaking

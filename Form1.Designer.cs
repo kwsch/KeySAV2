@@ -41,6 +41,18 @@
             this.RTB_VID = new System.Windows.Forms.RichTextBox();
             this.Tab_SAV = new System.Windows.Forms.TabPage();
             this.GB_Filter = new System.Windows.Forms.GroupBox();
+            this.CHK_IV_Spe = new System.Windows.Forms.CheckBox();
+            this.CHK_IV_SpDef = new System.Windows.Forms.CheckBox();
+            this.CHK_IV_SpAtk = new System.Windows.Forms.CheckBox();
+            this.CHK_IV_Def = new System.Windows.Forms.CheckBox();
+            this.CHK_IV_Atk = new System.Windows.Forms.CheckBox();
+            this.CHK_IV_HP = new System.Windows.Forms.CheckBox();
+            this.TB_SVs = new System.Windows.Forms.TextBox();
+            this.CHK_Hatches_Shiny_For = new System.Windows.Forms.CheckBox();
+            this.CHK_Hatches_Shiny_For_Me = new System.Windows.Forms.CheckBox();
+            this.CHK_Is_Shiny = new System.Windows.Forms.CheckBox();
+            this.RAD_IVs = new System.Windows.Forms.RadioButton();
+            this.RAD_IVs_Miss = new System.Windows.Forms.RadioButton();
             this.CHK_Special_Attacker = new System.Windows.Forms.CheckBox();
             this.CHK_Trickroom = new System.Windows.Forms.CheckBox();
             this.CB_No_IVs = new System.Windows.Forms.ComboBox();
@@ -86,18 +98,6 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
-            this.RAD_IVs_Miss = new System.Windows.Forms.RadioButton();
-            this.RAD_IVs = new System.Windows.Forms.RadioButton();
-            this.CHK_Is_Shiny = new System.Windows.Forms.CheckBox();
-            this.CHK_Hatches_Shiny_For_Me = new System.Windows.Forms.CheckBox();
-            this.CHK_Hatches_Shiny_For = new System.Windows.Forms.CheckBox();
-            this.TB_SVs = new System.Windows.Forms.TextBox();
-            this.CHK_IV_HP = new System.Windows.Forms.CheckBox();
-            this.CHK_IV_Atk = new System.Windows.Forms.CheckBox();
-            this.CHK_IV_Def = new System.Windows.Forms.CheckBox();
-            this.CHK_IV_SpAtk = new System.Windows.Forms.CheckBox();
-            this.CHK_IV_SpDef = new System.Windows.Forms.CheckBox();
-            this.CHK_IV_Spe = new System.Windows.Forms.CheckBox();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
@@ -276,6 +276,125 @@
             this.GB_Filter.TabStop = false;
             this.GB_Filter.Text = "Filtering";
             // 
+            // CHK_IV_Spe
+            // 
+            this.CHK_IV_Spe.AutoSize = true;
+            this.CHK_IV_Spe.Location = new System.Drawing.Point(209, 98);
+            this.CHK_IV_Spe.Name = "CHK_IV_Spe";
+            this.CHK_IV_Spe.Size = new System.Drawing.Size(45, 17);
+            this.CHK_IV_Spe.TabIndex = 20;
+            this.CHK_IV_Spe.Text = "Spe";
+            this.CHK_IV_Spe.UseVisualStyleBackColor = true;
+            // 
+            // CHK_IV_SpDef
+            // 
+            this.CHK_IV_SpDef.AutoSize = true;
+            this.CHK_IV_SpDef.Location = new System.Drawing.Point(209, 84);
+            this.CHK_IV_SpDef.Name = "CHK_IV_SpDef";
+            this.CHK_IV_SpDef.Size = new System.Drawing.Size(62, 17);
+            this.CHK_IV_SpDef.TabIndex = 19;
+            this.CHK_IV_SpDef.Text = "Sp. Def";
+            this.CHK_IV_SpDef.UseVisualStyleBackColor = true;
+            // 
+            // CHK_IV_SpAtk
+            // 
+            this.CHK_IV_SpAtk.AutoSize = true;
+            this.CHK_IV_SpAtk.Location = new System.Drawing.Point(209, 70);
+            this.CHK_IV_SpAtk.Name = "CHK_IV_SpAtk";
+            this.CHK_IV_SpAtk.Size = new System.Drawing.Size(61, 17);
+            this.CHK_IV_SpAtk.TabIndex = 18;
+            this.CHK_IV_SpAtk.Text = "Sp. Atk";
+            this.CHK_IV_SpAtk.UseVisualStyleBackColor = true;
+            // 
+            // CHK_IV_Def
+            // 
+            this.CHK_IV_Def.AutoSize = true;
+            this.CHK_IV_Def.Location = new System.Drawing.Point(135, 98);
+            this.CHK_IV_Def.Name = "CHK_IV_Def";
+            this.CHK_IV_Def.Size = new System.Drawing.Size(43, 17);
+            this.CHK_IV_Def.TabIndex = 17;
+            this.CHK_IV_Def.Text = "Def";
+            this.CHK_IV_Def.UseVisualStyleBackColor = true;
+            // 
+            // CHK_IV_Atk
+            // 
+            this.CHK_IV_Atk.AutoSize = true;
+            this.CHK_IV_Atk.Location = new System.Drawing.Point(135, 84);
+            this.CHK_IV_Atk.Name = "CHK_IV_Atk";
+            this.CHK_IV_Atk.Size = new System.Drawing.Size(42, 17);
+            this.CHK_IV_Atk.TabIndex = 16;
+            this.CHK_IV_Atk.Text = "Atk";
+            this.CHK_IV_Atk.UseVisualStyleBackColor = true;
+            // 
+            // CHK_IV_HP
+            // 
+            this.CHK_IV_HP.AutoSize = true;
+            this.CHK_IV_HP.Location = new System.Drawing.Point(135, 70);
+            this.CHK_IV_HP.Name = "CHK_IV_HP";
+            this.CHK_IV_HP.Size = new System.Drawing.Size(41, 17);
+            this.CHK_IV_HP.TabIndex = 15;
+            this.CHK_IV_HP.Text = "HP";
+            this.CHK_IV_HP.UseVisualStyleBackColor = true;
+            // 
+            // TB_SVs
+            // 
+            this.TB_SVs.Location = new System.Drawing.Point(135, 142);
+            this.TB_SVs.Name = "TB_SVs";
+            this.TB_SVs.Size = new System.Drawing.Size(175, 20);
+            this.TB_SVs.TabIndex = 14;
+            // 
+            // CHK_Hatches_Shiny_For
+            // 
+            this.CHK_Hatches_Shiny_For.AutoSize = true;
+            this.CHK_Hatches_Shiny_For.Location = new System.Drawing.Point(6, 144);
+            this.CHK_Hatches_Shiny_For.Name = "CHK_Hatches_Shiny_For";
+            this.CHK_Hatches_Shiny_For.Size = new System.Drawing.Size(108, 17);
+            this.CHK_Hatches_Shiny_For.TabIndex = 13;
+            this.CHK_Hatches_Shiny_For.Text = "Hatches shiny for";
+            this.CHK_Hatches_Shiny_For.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Hatches_Shiny_For_Me
+            // 
+            this.CHK_Hatches_Shiny_For_Me.AutoSize = true;
+            this.CHK_Hatches_Shiny_For_Me.Location = new System.Drawing.Point(135, 121);
+            this.CHK_Hatches_Shiny_For_Me.Name = "CHK_Hatches_Shiny_For_Me";
+            this.CHK_Hatches_Shiny_For_Me.Size = new System.Drawing.Size(125, 17);
+            this.CHK_Hatches_Shiny_For_Me.TabIndex = 12;
+            this.CHK_Hatches_Shiny_For_Me.Text = "Hatches shiny for me";
+            this.CHK_Hatches_Shiny_For_Me.UseVisualStyleBackColor = true;
+            // 
+            // CHK_Is_Shiny
+            // 
+            this.CHK_Is_Shiny.AutoSize = true;
+            this.CHK_Is_Shiny.Location = new System.Drawing.Point(6, 121);
+            this.CHK_Is_Shiny.Name = "CHK_Is_Shiny";
+            this.CHK_Is_Shiny.Size = new System.Drawing.Size(61, 17);
+            this.CHK_Is_Shiny.TabIndex = 11;
+            this.CHK_Is_Shiny.Text = "Is shiny";
+            this.CHK_Is_Shiny.UseVisualStyleBackColor = true;
+            // 
+            // RAD_IVs
+            // 
+            this.RAD_IVs.AutoSize = true;
+            this.RAD_IVs.Location = new System.Drawing.Point(6, 93);
+            this.RAD_IVs.Name = "RAD_IVs";
+            this.RAD_IVs.Size = new System.Drawing.Size(96, 17);
+            this.RAD_IVs.TabIndex = 10;
+            this.RAD_IVs.Text = "IVs musn\'t miss";
+            this.RAD_IVs.UseVisualStyleBackColor = true;
+            // 
+            // RAD_IVs_Miss
+            // 
+            this.RAD_IVs_Miss.AutoSize = true;
+            this.RAD_IVs_Miss.Checked = true;
+            this.RAD_IVs_Miss.Location = new System.Drawing.Point(6, 70);
+            this.RAD_IVs_Miss.Name = "RAD_IVs_Miss";
+            this.RAD_IVs_Miss.Size = new System.Drawing.Size(85, 17);
+            this.RAD_IVs_Miss.TabIndex = 9;
+            this.RAD_IVs_Miss.TabStop = true;
+            this.RAD_IVs_Miss.Text = "IVs may miss";
+            this.RAD_IVs_Miss.UseVisualStyleBackColor = true;
+            // 
             // CHK_Special_Attacker
             // 
             this.CHK_Special_Attacker.AutoSize = true;
@@ -365,6 +484,7 @@
             this.CHK_Enable_Filtering.TabIndex = 0;
             this.CHK_Enable_Filtering.Text = "Enable filtering";
             this.CHK_Enable_Filtering.UseVisualStyleBackColor = true;
+            this.CHK_Enable_Filtering.CheckedChanged += new System.EventHandler(this.toggleFilter);
             // 
             // B_BKP_SAV
             // 
@@ -851,125 +971,6 @@
             this.CB_Game.Size = new System.Drawing.Size(41, 21);
             this.CB_Game.TabIndex = 2;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
-            // 
-            // RAD_IVs_Miss
-            // 
-            this.RAD_IVs_Miss.AutoSize = true;
-            this.RAD_IVs_Miss.Checked = true;
-            this.RAD_IVs_Miss.Location = new System.Drawing.Point(6, 70);
-            this.RAD_IVs_Miss.Name = "RAD_IVs_Miss";
-            this.RAD_IVs_Miss.Size = new System.Drawing.Size(85, 17);
-            this.RAD_IVs_Miss.TabIndex = 9;
-            this.RAD_IVs_Miss.TabStop = true;
-            this.RAD_IVs_Miss.Text = "IVs may miss";
-            this.RAD_IVs_Miss.UseVisualStyleBackColor = true;
-            // 
-            // RAD_IVs
-            // 
-            this.RAD_IVs.AutoSize = true;
-            this.RAD_IVs.Location = new System.Drawing.Point(6, 93);
-            this.RAD_IVs.Name = "RAD_IVs";
-            this.RAD_IVs.Size = new System.Drawing.Size(96, 17);
-            this.RAD_IVs.TabIndex = 10;
-            this.RAD_IVs.Text = "IVs musn\'t miss";
-            this.RAD_IVs.UseVisualStyleBackColor = true;
-            // 
-            // CHK_Is_Shiny
-            // 
-            this.CHK_Is_Shiny.AutoSize = true;
-            this.CHK_Is_Shiny.Location = new System.Drawing.Point(6, 121);
-            this.CHK_Is_Shiny.Name = "CHK_Is_Shiny";
-            this.CHK_Is_Shiny.Size = new System.Drawing.Size(61, 17);
-            this.CHK_Is_Shiny.TabIndex = 11;
-            this.CHK_Is_Shiny.Text = "Is shiny";
-            this.CHK_Is_Shiny.UseVisualStyleBackColor = true;
-            // 
-            // CHK_Hatches_Shiny_For_Me
-            // 
-            this.CHK_Hatches_Shiny_For_Me.AutoSize = true;
-            this.CHK_Hatches_Shiny_For_Me.Location = new System.Drawing.Point(135, 121);
-            this.CHK_Hatches_Shiny_For_Me.Name = "CHK_Hatches_Shiny_For_Me";
-            this.CHK_Hatches_Shiny_For_Me.Size = new System.Drawing.Size(125, 17);
-            this.CHK_Hatches_Shiny_For_Me.TabIndex = 12;
-            this.CHK_Hatches_Shiny_For_Me.Text = "Hatches shiny for me";
-            this.CHK_Hatches_Shiny_For_Me.UseVisualStyleBackColor = true;
-            // 
-            // CHK_Hatches_Shiny_For
-            // 
-            this.CHK_Hatches_Shiny_For.AutoSize = true;
-            this.CHK_Hatches_Shiny_For.Location = new System.Drawing.Point(6, 144);
-            this.CHK_Hatches_Shiny_For.Name = "CHK_Hatches_Shiny_For";
-            this.CHK_Hatches_Shiny_For.Size = new System.Drawing.Size(108, 17);
-            this.CHK_Hatches_Shiny_For.TabIndex = 13;
-            this.CHK_Hatches_Shiny_For.Text = "Hatches shiny for";
-            this.CHK_Hatches_Shiny_For.UseVisualStyleBackColor = true;
-            // 
-            // TB_SVs
-            // 
-            this.TB_SVs.Location = new System.Drawing.Point(135, 142);
-            this.TB_SVs.Name = "TB_SVs";
-            this.TB_SVs.Size = new System.Drawing.Size(175, 20);
-            this.TB_SVs.TabIndex = 14;
-            // 
-            // CHK_IV_HP
-            // 
-            this.CHK_IV_HP.AutoSize = true;
-            this.CHK_IV_HP.Location = new System.Drawing.Point(135, 70);
-            this.CHK_IV_HP.Name = "CHK_IV_HP";
-            this.CHK_IV_HP.Size = new System.Drawing.Size(41, 17);
-            this.CHK_IV_HP.TabIndex = 15;
-            this.CHK_IV_HP.Text = "HP";
-            this.CHK_IV_HP.UseVisualStyleBackColor = true;
-            // 
-            // CHK_IV_Atk
-            // 
-            this.CHK_IV_Atk.AutoSize = true;
-            this.CHK_IV_Atk.Location = new System.Drawing.Point(135, 84);
-            this.CHK_IV_Atk.Name = "CHK_IV_Atk";
-            this.CHK_IV_Atk.Size = new System.Drawing.Size(42, 17);
-            this.CHK_IV_Atk.TabIndex = 16;
-            this.CHK_IV_Atk.Text = "Atk";
-            this.CHK_IV_Atk.UseVisualStyleBackColor = true;
-            // 
-            // CHK_IV_Def
-            // 
-            this.CHK_IV_Def.AutoSize = true;
-            this.CHK_IV_Def.Location = new System.Drawing.Point(135, 98);
-            this.CHK_IV_Def.Name = "CHK_IV_Def";
-            this.CHK_IV_Def.Size = new System.Drawing.Size(43, 17);
-            this.CHK_IV_Def.TabIndex = 17;
-            this.CHK_IV_Def.Text = "Def";
-            this.CHK_IV_Def.UseVisualStyleBackColor = true;
-            // 
-            // CHK_IV_SpAtk
-            // 
-            this.CHK_IV_SpAtk.AutoSize = true;
-            this.CHK_IV_SpAtk.Location = new System.Drawing.Point(209, 70);
-            this.CHK_IV_SpAtk.Name = "CHK_IV_SpAtk";
-            this.CHK_IV_SpAtk.Size = new System.Drawing.Size(61, 17);
-            this.CHK_IV_SpAtk.TabIndex = 18;
-            this.CHK_IV_SpAtk.Text = "Sp. Atk";
-            this.CHK_IV_SpAtk.UseVisualStyleBackColor = true;
-            // 
-            // CHK_IV_SpDef
-            // 
-            this.CHK_IV_SpDef.AutoSize = true;
-            this.CHK_IV_SpDef.Location = new System.Drawing.Point(209, 84);
-            this.CHK_IV_SpDef.Name = "CHK_IV_SpDef";
-            this.CHK_IV_SpDef.Size = new System.Drawing.Size(62, 17);
-            this.CHK_IV_SpDef.TabIndex = 19;
-            this.CHK_IV_SpDef.Text = "Sp. Def";
-            this.CHK_IV_SpDef.UseVisualStyleBackColor = true;
-            // 
-            // CHK_IV_Spe
-            // 
-            this.CHK_IV_Spe.AutoSize = true;
-            this.CHK_IV_Spe.Location = new System.Drawing.Point(209, 98);
-            this.CHK_IV_Spe.Name = "CHK_IV_Spe";
-            this.CHK_IV_Spe.Size = new System.Drawing.Size(45, 17);
-            this.CHK_IV_Spe.TabIndex = 20;
-            this.CHK_IV_Spe.Text = "Spe";
-            this.CHK_IV_Spe.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

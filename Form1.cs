@@ -34,6 +34,8 @@ namespace KeySAV2
             CB_MainLanguage.SelectedIndex = 0;
             CB_BoxStart.SelectedIndex = 1;
             changeboxsetting(null, null);
+            CB_BoxEnd.SelectedIndex = 0;
+            CB_BoxEnd.Enabled = false;
             CB_Team.SelectedIndex = 0;
             CB_ExportStyle.SelectedIndex = 0;
             CB_BoxColor.SelectedIndex = 0;

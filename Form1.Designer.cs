@@ -419,6 +419,7 @@
             // 
             // CB_No_IVs
             // 
+            this.CB_No_IVs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_No_IVs.FormattingEnabled = true;
             this.CB_No_IVs.Items.AddRange(new object[] {
             "0",
@@ -453,6 +454,8 @@
             // 
             // CB_HP_Type
             // 
+            this.CB_HP_Type.BackColor = System.Drawing.SystemColors.Window;
+            this.CB_HP_Type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_HP_Type.FormattingEnabled = true;
             this.CB_HP_Type.Items.AddRange(new object[] {
             "Any",

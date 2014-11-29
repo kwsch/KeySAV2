@@ -745,24 +745,32 @@ namespace KeySAV2
 
             while (CHK_Enable_Filtering.Checked)
             {
+                bool checkHp = false;
+                if (CB_HP_Type.SelectedIndex > 0)
+                {
+                    if (CB_HP_Type.SelectedIndex != data.hptype) { statisfiesFilters = false; break; }
+                    checkHp = true;
+                }
+
                 int perfects = Convert.ToInt16(CB_No_IVs.SelectedItem);
                 bool ivsSelected = CHK_IV_HP.Checked || CHK_IV_Atk.Checked || CHK_IV_Def.Checked || CHK_IV_SpAtk.Checked || CHK_IV_SpDef.Checked || CHK_IV_Spe.Checked;
-                if (hp == "31") --perfects;
+                if (hp == "31" ||checkHp && hp == "30") --perfects;
                 else if (ivsSelected && CHK_IV_HP.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
-                if (atk == "31" && !CHK_Special_Attacker.Checked || atk == "0" && CHK_Special_Attacker.Checked) --perfects;
+                if ((atk == "31" || checkHp && atk == "30") && !CHK_Special_Attacker.Checked || (atk == "0" || checkHp && atk == "1") && CHK_Special_Attacker.Checked) --perfects;
                 else if (ivsSelected && CHK_IV_Atk.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
-                if (def == "31") --perfects;
+                if (def == "31" || checkHp && def == "30") --perfects;
                 else if (ivsSelected && CHK_IV_Def.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
-                if (spa == "31") --perfects;
+                if (spa == "31" || checkHp && spa == "30") --perfects;
                 else if (ivsSelected && CHK_IV_SpAtk.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
-                if (spd == "31") --perfects;
+                if (spd == "31" || checkHp && spd == "30") --perfects;
                 else if (ivsSelected && CHK_IV_SpDef.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
-                if (spe == "31" && !CHK_Trickroom.Checked || spe == "0" && CHK_Trickroom.Checked) --perfects;
+                if ((spe == "31" || checkHp && spe == "30") && !CHK_Trickroom.Checked || (spe == "0" || checkHp && spe == "1") && CHK_Trickroom.Checked) --perfects;
                 else if (ivsSelected && CHK_IV_Spe.Checked != RAD_IVs_Miss.Checked) { statisfiesFilters = false; break; }
                 if (perfects > 0) { statisfiesFilters = false; break; }
 
                 if (CHK_Is_Shiny.Checked || CHK_Hatches_Shiny_For_Me.Checked || CHK_Hatches_Shiny_For.Checked)
                 {
+                    // TODO: Should probably cache this somewhere...
                     ushort[] acceptedTSVs = (TB_SVs.Text != "" ? Array.ConvertAll(TB_SVs.Text.Split(','), Convert.ToUInt16) : new ushort[0]); 
                     if (!(CHK_Is_Shiny.Checked && data.isshiny ||
                         data.isegg && CHK_Hatches_Shiny_For_Me.Checked && ESV == TSV ||

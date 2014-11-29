@@ -748,6 +748,7 @@ namespace KeySAV2
 
             while (CHK_Enable_Filtering.Checked)
             {
+                if (CHK_Egg.Checked && !data.isegg) { statisfiesFilters = false; break; }
                 bool checkHp = false;
                 if (CB_HP_Type.SelectedIndex > 0)
                 {
@@ -1122,7 +1123,7 @@ namespace KeySAV2
             CHK_IV_SpAtk.Enabled = CHK_IV_SpDef.Enabled = CHK_IV_Spe.Enabled =
             CHK_Is_Shiny.Enabled = CHK_Hatches_Shiny_For_Me.Enabled =
             CHK_Hatches_Shiny_For.Enabled = TB_SVs.Enabled =
-            CHK_Enable_Filtering.Checked;
+            CHK_Egg.Enabled = CHK_Enable_Filtering.Checked;
         }
 
         // File Keystream Breaking

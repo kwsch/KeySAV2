@@ -98,6 +98,7 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
+            this.CHK_Egg = new System.Windows.Forms.CheckBox();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
@@ -249,6 +250,7 @@
             // 
             // GB_Filter
             // 
+            this.GB_Filter.Controls.Add(this.CHK_Egg);
             this.GB_Filter.Controls.Add(this.CHK_IV_Spe);
             this.GB_Filter.Controls.Add(this.CHK_IV_SpDef);
             this.GB_Filter.Controls.Add(this.CHK_IV_SpAtk);
@@ -368,9 +370,9 @@
             this.CHK_Is_Shiny.AutoSize = true;
             this.CHK_Is_Shiny.Location = new System.Drawing.Point(6, 121);
             this.CHK_Is_Shiny.Name = "CHK_Is_Shiny";
-            this.CHK_Is_Shiny.Size = new System.Drawing.Size(61, 17);
+            this.CHK_Is_Shiny.Size = new System.Drawing.Size(82, 17);
             this.CHK_Is_Shiny.TabIndex = 11;
-            this.CHK_Is_Shiny.Text = "Is shiny";
+            this.CHK_Is_Shiny.Text = "Shinies only";
             this.CHK_Is_Shiny.UseVisualStyleBackColor = true;
             // 
             // RAD_IVs
@@ -480,9 +482,9 @@
             this.CHK_Enable_Filtering.AutoSize = true;
             this.CHK_Enable_Filtering.Location = new System.Drawing.Point(5, 16);
             this.CHK_Enable_Filtering.Name = "CHK_Enable_Filtering";
-            this.CHK_Enable_Filtering.Size = new System.Drawing.Size(95, 17);
+            this.CHK_Enable_Filtering.Size = new System.Drawing.Size(59, 17);
             this.CHK_Enable_Filtering.TabIndex = 0;
-            this.CHK_Enable_Filtering.Text = "Enable filtering";
+            this.CHK_Enable_Filtering.Text = "Enable";
             this.CHK_Enable_Filtering.UseVisualStyleBackColor = true;
             this.CHK_Enable_Filtering.CheckedChanged += new System.EventHandler(this.toggleFilter);
             // 
@@ -972,6 +974,16 @@
             this.CB_Game.TabIndex = 2;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
             // 
+            // CHK_Egg
+            // 
+            this.CHK_Egg.AutoSize = true;
+            this.CHK_Egg.Location = new System.Drawing.Point(60, 16);
+            this.CHK_Egg.Name = "CHK_Egg";
+            this.CHK_Egg.Size = new System.Drawing.Size(72, 17);
+            this.CHK_Egg.TabIndex = 21;
+            this.CHK_Egg.Text = "Eggs only";
+            this.CHK_Egg.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AllowDrop = true;
@@ -1073,6 +1085,7 @@
         private System.Windows.Forms.CheckBox CHK_IV_Def;
         private System.Windows.Forms.CheckBox CHK_IV_Atk;
         private System.Windows.Forms.CheckBox CHK_IV_HP;
+        private System.Windows.Forms.CheckBox CHK_Egg;
 
     }
 }

@@ -100,7 +100,7 @@ namespace KeySAV2
 
         // Inputs
         public byte[] savefile = new Byte[0x10009C];
-        public byte[] savkey = new Byte[0x80000];
+        public byte[] savkey = new Byte[0xB4AD4];
         public byte[] batvideo = new Byte[0x100000]; // whatever
         
         private byte[] zerobox = new Byte[232 * 30];
@@ -395,7 +395,7 @@ namespace KeySAV2
             Array.Copy(input, input.Length % 0x100000, savefile, 0, 0x100000);
             // Fetch Stamp
             ulong stamp = BitConverter.ToUInt64(savefile, 0x10);
-            string keyfile = fetchKey(stamp, 0x80000);
+            string keyfile = fetchKey(stamp, 0xB4AD4);
             if (keyfile == "")
             {
                 if (showUI)
@@ -420,6 +420,16 @@ namespace KeySAV2
             byte[] key = File.ReadAllBytes(keyfile);
             byte[] empty = new Byte[232];
             // Save file is already loaded.
+            // If slot one was used for the last save copy the boxes to slot 2 and apply key
+            if(BitConverter.ToUInt32(key, 0x80000) == BitConverter.ToUInt32(savefile, 0x168))
+            {
+                
+                int boxoffset = BitConverter.ToInt32(key, 0x1C);
+                for(int i = 0, j = boxoffset; i<232*30*31; ++i, ++j)
+                {
+                    savefile[j] = (byte)(savefile[j - 0x7F000] ^ key[0x80004 + i]);
+                }
+            }
 
             // Get our empty file set up.
             Array.Copy(key, 0x10, empty, 0xE0, 0x4);
@@ -1371,13 +1381,13 @@ namespace KeySAV2
             byte[] emptyekx = new Byte[232];
             byte[] ekxdata = new Byte[232];
             byte[] pkx = new Byte[232];
+            byte[] slotsKey = new byte[0];
+            byte[] save1Save = break1;
             #region Finding the User Specific Data: Using Valid to keep track of progress...
             // Do Break. Let's first do some sanity checking to find out the 2 offsets we're dumping from.
             // Loop through save file to find
             int fo = savefile.Length / 2 + 0x20000; // Initial Offset, can tweak later.
             int success = 0;
-            byte isSave1 = 0;
-            byte[] diff = new byte[0];
 
             string result = "";
 
@@ -1533,7 +1543,7 @@ namespace KeySAV2
                     Array.Resize(ref emptyekx, 232); // ensure it's 232 bytes.
 
                     // Empty EKX obtained. Time to set up our key file.
-                    savkey = new Byte[0x80000];
+                    savkey = new Byte[0xB4AD4];
                     // Copy over 0x10-0x1F (Save Encryption Unused Data so we can track data).
                     Array.Copy(break1, 0x10, savkey, 0, 0x10);
                     // Include empty data
@@ -1634,9 +1644,8 @@ namespace KeySAV2
                             break;
                         }
                     }
-                    if (break3is1) isSave1 = break3[0x168];
-                    else isSave1 = break1[0x168];
-                    diff = diff1;
+                    if (break3is1) save1Save = break3;
+                    slotsKey = diff1;
                 }
                 else success = 0;
             }
@@ -1651,6 +1660,12 @@ namespace KeySAV2
                     Array.Copy(zerobox, 0, savkey, 0x00100 + i * (232 * 30), 232 * 30);
                     Array.Copy(zerobox, 0, savkey, 0x40000 + i * (232 * 30), 232 * 30);
                 }
+
+                // Copy the key for the slot selector
+                Array.Copy(save1Save, 0x168, savkey, 0x80000, 4);
+
+                // Copy the key for the other save slot
+                Array.Copy(slotsKey, 0, savkey, 0x80004, 232*30*31);
 
                 // Since we don't know if the user put them in in the wrong order, let's just markup our keystream with data.
                 byte[] data1 = new Byte[232];
@@ -1687,9 +1702,18 @@ namespace KeySAV2
                 ushort tid = BitConverter.ToUInt16(pkx, 0xC);
                 ushort sid = BitConverter.ToUInt16(pkx, 0xE);
                 ushort tsv = (ushort)((tid ^ sid) >> 4);
-                File.WriteAllBytes(Path.Combine(@".\data\", CleanFileName(String.Format("SAV Key - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")))), savkey);
-                File.WriteAllBytes(Path.Combine(@".\data\", CleanFileName(String.Format("SAV Diff - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")))), diff);
-                File.WriteAllBytes(Path.Combine(@".\data\", CleanFileName(String.Format("SAV Slot - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")))), new byte[1] {isSave1});
+                SaveFileDialog sfd = new SaveFileDialog();
+                string ID = sfd.InitialDirectory;
+                sfd.InitialDirectory = path_exe + "\\data";
+                sfd.RestoreDirectory = true;
+                sfd.FileName = CleanFileName(String.Format("SAV Key - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")));
+                sfd.Filter = "Save Key|*.bin";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    File.WriteAllBytes(sfd.FileName, savkey);
+                else
+                    MessageBox.Show("Chose not to save keystream.", "Alert");
+
+                sfd.InitialDirectory = ID; sfd.RestoreDirectory = true;
             }
             else // Failed
                 MessageBox.Show(result + "Keystreams were NOT bruteforced!\r\n\r\nStart over and try again :(");

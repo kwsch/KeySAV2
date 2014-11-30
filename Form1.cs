@@ -100,7 +100,7 @@ namespace KeySAV2
 
         // Inputs
         public byte[] savefile = new Byte[0x10009C];
-        public byte[] savkey = new Byte[0x80000];
+        public byte[] savkey = new Byte[0xB4AD4];
         public byte[] batvideo = new Byte[0x100000]; // whatever
         
         private byte[] zerobox = new Byte[232 * 30];
@@ -123,8 +123,10 @@ namespace KeySAV2
         // Breaking Usage
         public string file1 = "";
         public string file2 = "";
+        public string file3 = "";
         public byte[] break1 = new Byte[0x10009C];
         public byte[] break2 = new Byte[0x10009C];
+        public byte[] break3 = new Byte[0x10009C];
         public byte[] video1 = new Byte[28256];
         public byte[] video2 = new Byte[28256];
 
@@ -374,10 +376,17 @@ namespace KeySAV2
         }
         private void openSAV(string path)
         {
+            openSAV_(path, ref savefile, ref savkeypath, true);
+        }
+        private void openSAV_(string path, ref byte[] savefile, ref string savkeypath, bool showUI)
+        {
             // check to see if good input file
             long len = new FileInfo(path).Length;
             if (len != 0x100000 && len != 0x10009C)
-            { MessageBox.Show("Incorrect File Size"); return; }
+            { 
+                if(showUI) MessageBox.Show("Incorrect File Size");
+                return;
+            }
             
             TB_SAV.Text = path;
 
@@ -386,24 +395,41 @@ namespace KeySAV2
             Array.Copy(input, input.Length % 0x100000, savefile, 0, 0x100000);
             // Fetch Stamp
             ulong stamp = BitConverter.ToUInt64(savefile, 0x10);
-            string keyfile = fetchKey(stamp, 0x80000);
+            string keyfile = fetchKey(stamp, 0xB4AD4);
             if (keyfile == "")
             {
-                L_KeySAV.Text = "Key not found. Please break for this SAV first.";
-                B_GoSAV.Enabled = false;
+                if (showUI)
+                {
+                    L_KeySAV.Text = "Key not found. Please break for this SAV first.";
+                    B_GoSAV.Enabled = false;
+                }
                 return;
             }
             else
             {
-                B_GoSAV.Enabled = true;
-                L_KeySAV.Text = new FileInfo(keyfile).Name;
+                if (showUI)
+                {
+                    B_GoSAV.Enabled = true;
+                    L_KeySAV.Text = new FileInfo(keyfile).Name;
+                }
                 savkeypath = keyfile;
             }
 
-            B_GoSAV.Enabled = CB_BoxEnd.Enabled = CB_BoxStart.Enabled = B_BKP_SAV.Visible = !(keyfile == "");
+            if(showUI)
+                B_GoSAV.Enabled = CB_BoxEnd.Enabled = CB_BoxStart.Enabled = B_BKP_SAV.Visible = !(keyfile == "");
             byte[] key = File.ReadAllBytes(keyfile);
             byte[] empty = new Byte[232];
             // Save file is already loaded.
+            // If slot one was used for the last save copy the boxes to slot 2 and apply key
+            if(BitConverter.ToUInt32(key, 0x80000) == BitConverter.ToUInt32(savefile, 0x168))
+            {
+                
+                int boxoffset = BitConverter.ToInt32(key, 0x1C);
+                for(int i = 0, j = boxoffset; i<232*30*31; ++i, ++j)
+                {
+                    savefile[j] = (byte)(savefile[j - 0x7F000] ^ key[0x80004 + i]);
+                }
+            }
 
             // Get our empty file set up.
             Array.Copy(key, 0x10, empty, 0xE0, 0x4);
@@ -421,7 +447,7 @@ namespace KeySAV2
             Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
             empty = encryptArray(empty);
             Array.Resize(ref empty, 0xE8);
-            scanSAV(savefile, key, empty);
+            scanSAV(savefile, key, empty, showUI);
             File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
         }
         private void openVID(string path)
@@ -685,14 +711,14 @@ namespace KeySAV2
             else 
                 return null; // Slot Decryption error?!
         }
-        private void scanSAV(byte[] input, byte[] keystream, byte[] blank, bool setLable = true)
+        private void scanSAV(byte[] input, byte[] keystream, byte[] blank, bool showUI = true)
         {
             slots = 0;
             int boxoffset = BitConverter.ToInt32(keystream, 0x1C);
             for (int i = 0; i < 930; i++)
                 fetchpkx(input, keystream, boxoffset + i * 232, 0x100 + i * 232, 0x40000 + i * 232, blank);
 
-            if(setLable)
+            if(showUI)
                 L_SAVStats.Text = String.Format("{0}/930", slots);
             //MessageBox.Show("Unlocked: " + unlockedslots + " Soft: " + softslots);
         }
@@ -1194,6 +1220,36 @@ namespace KeySAV2
             togglebreak();
         }
 
+        private void loadBreak3(object sender, EventArgs e)
+        {
+            // Open Save File
+            OpenFileDialog boxsave = new OpenFileDialog();
+            boxsave.Filter = "Save/BV File|*.*";
+
+            if (boxsave.ShowDialog() == DialogResult.OK)
+            {
+                string path = boxsave.FileName;
+                byte[] input = File.ReadAllBytes(path);
+                if ((input.Length == 0x10009C) || input.Length == 0x100000)
+                {
+                    Array.Copy(input, input.Length % 0x100000, break3, 0, 0x100000); // Force save to 0x100000
+                    TB_File3.Text = path;
+                    file3 = "SAV";
+                }
+                else if (input.Length == 28256)
+                {
+                    file3 = "";
+                    MessageBox.Show("Incorrect File Loaded: For breaking Battle Videos a file 3 is not needed.", "Error");
+                }
+                else
+                {
+                    file3 = "";
+                    MessageBox.Show("Incorrect File Loaded: Not a SAV (1MB).", "Error");
+                }
+            }
+            togglebreak();
+        }
+
         private void loadBreakFolder(object sender, EventArgs e)
         {
             FolderBrowserDialog folder = new FolderBrowserDialog();
@@ -1208,7 +1264,7 @@ namespace KeySAV2
         {
             B_Break.Enabled = false;
             if (TB_File1.Text != "" && TB_File2.Text != "")
-                if ((file1 == "SAV" && file2 == "SAV") || (file1 == "BV" && file2 == "BV"))
+                if ((file1 == "SAV" && file2 == "SAV" && file3 == "SAV" && TB_File3.Text != "") || (file1 == "BV" && file2 == "BV"))
                    B_Break.Enabled = true;
         }
 
@@ -1325,11 +1381,14 @@ namespace KeySAV2
             byte[] emptyekx = new Byte[232];
             byte[] ekxdata = new Byte[232];
             byte[] pkx = new Byte[232];
+            byte[] slotsKey = new byte[0];
+            byte[] save1Save = break1;
             #region Finding the User Specific Data: Using Valid to keep track of progress...
             // Do Break. Let's first do some sanity checking to find out the 2 offsets we're dumping from.
             // Loop through save file to find
             int fo = savefile.Length / 2 + 0x20000; // Initial Offset, can tweak later.
             int success = 0;
+
             string result = "";
 
             for (int d = 0; d < 2; d++)
@@ -1484,7 +1543,7 @@ namespace KeySAV2
                     Array.Resize(ref emptyekx, 232); // ensure it's 232 bytes.
 
                     // Empty EKX obtained. Time to set up our key file.
-                    savkey = new Byte[0x80000];
+                    savkey = new Byte[0xB4AD4];
                     // Copy over 0x10-0x1F (Save Encryption Unused Data so we can track data).
                     Array.Copy(break1, 0x10, savkey, 0, 0x10);
                     // Include empty data
@@ -1564,6 +1623,34 @@ namespace KeySAV2
             }
             if (success == 1)
             {
+                byte[] diff1 = new byte[31*30*232];
+                byte[] diff2 = new byte[31*30*232];
+                for(uint i = 0; i < 31*30*232; ++i)
+                {
+                    diff1[i] = (byte)(break1[offset[0] + i] ^ break1[offset[0] + i - 0x7F000]);
+                }
+                for(uint i = 0; i < 31*30*232; ++i)
+                {
+                    diff2[i] = (byte)(break2[offset[0] + i] ^ break2[offset[0] + i - 0x7F000]);
+                }
+                if (diff1.SequenceEqual(diff2))
+                {
+                    bool break3is1 = true;
+                    for(uint i = (uint)offset[0]; i<offset[0] + 31*30*232; ++i)
+                    {
+                        if(!(break2[i] == break3[i]))
+                        {
+                            break3is1 = false;
+                            break;
+                        }
+                    }
+                    if (break3is1) save1Save = break3;
+                    slotsKey = diff1;
+                }
+                else success = 0;
+            }
+            if (success == 1)
+            {
                 // Markup the save to know that boxes 1 & 2 are dumpable.
                 savkey[0x20] = 3; // 00000011 (boxes 1 & 2)
 
@@ -1573,6 +1660,12 @@ namespace KeySAV2
                     Array.Copy(zerobox, 0, savkey, 0x00100 + i * (232 * 30), 232 * 30);
                     Array.Copy(zerobox, 0, savkey, 0x40000 + i * (232 * 30), 232 * 30);
                 }
+
+                // Copy the key for the slot selector
+                Array.Copy(save1Save, 0x168, savkey, 0x80000, 4);
+
+                // Copy the key for the other save slot
+                Array.Copy(slotsKey, 0, savkey, 0x80004, 232*30*31);
 
                 // Since we don't know if the user put them in in the wrong order, let's just markup our keystream with data.
                 byte[] data1 = new Byte[232];
@@ -2150,49 +2243,11 @@ namespace KeySAV2
 
         private void B_BreakFolder_Click(object sender, EventArgs e)
         {
-            byte[] savefile = new byte[0x100000];
-            string savkeypath;
+            byte[] savefile = new byte[0x10009C];
+            string savkeypath = "";
             foreach (string path in Directory.GetFiles(TB_Folder.Text))
             {
-                // check to see if good input file
-                long len = new FileInfo(path).Length;
-                if (len != 0x100000 && len != 0x10009C)
-                    continue;
-
-                // Go ahead and load the save file into RAM...
-                byte[] input = File.ReadAllBytes(path);
-                Array.Copy(input, input.Length % 0x100000, savefile, 0, 0x100000);
-                // Fetch Stamp
-                ulong stamp = BitConverter.ToUInt64(savefile, 0x10);
-                string keyfile = fetchKey(stamp, 0x80000);
-                if (keyfile == "")
-                    continue;
-                else
-                    savkeypath = keyfile;
-
-                byte[] key = File.ReadAllBytes(keyfile);
-                byte[] empty = new Byte[232];
-                // Save file is already loaded.
-
-                // Get our empty file set up.
-                Array.Copy(key, 0x10, empty, 0xE0, 0x4);
-                string nick = eggnames[empty[0xE3] - 1];
-                // Stuff in the nickname to our blank EKX.
-                byte[] nicknamebytes = Encoding.Unicode.GetBytes(nick);
-                Array.Resize(ref nicknamebytes, 24);
-                Array.Copy(nicknamebytes, 0, empty, 0x40, nicknamebytes.Length);
-
-                // Fix CHK
-                uint chk = 0;
-                for (int i = 8; i < 232; i += 2) // Loop through the entire PKX
-                    chk += BitConverter.ToUInt16(empty, i);
-
-                // Apply New Checksum
-                Array.Copy(BitConverter.GetBytes(chk), 0, empty, 06, 2);
-                empty = encryptArray(empty);
-                Array.Resize(ref empty, 0xE8);
-                scanSAV(savefile, key, empty, false);
-                File.WriteAllBytes(keyfile, key); // Key has been scanned for new slots, re-save key.
+                openSAV_(path, ref savefile, ref savkeypath, false);
             }
             MessageBox.Show("Processed all files in folder...");
         }

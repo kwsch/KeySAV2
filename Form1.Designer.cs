@@ -41,6 +41,7 @@
             this.RTB_VID = new System.Windows.Forms.RichTextBox();
             this.Tab_SAV = new System.Windows.Forms.TabPage();
             this.GB_Filter = new System.Windows.Forms.GroupBox();
+            this.CHK_Egg = new System.Windows.Forms.CheckBox();
             this.CHK_IV_Spe = new System.Windows.Forms.CheckBox();
             this.CHK_IV_SpDef = new System.Windows.Forms.CheckBox();
             this.CHK_IV_SpAtk = new System.Windows.Forms.CheckBox();
@@ -98,7 +99,8 @@
             this.RTB_OPTIONS = new System.Windows.Forms.RichTextBox();
             this.CB_MainLanguage = new System.Windows.Forms.ComboBox();
             this.CB_Game = new System.Windows.Forms.ComboBox();
-            this.CHK_Egg = new System.Windows.Forms.CheckBox();
+            this.B_File3 = new System.Windows.Forms.Button();
+            this.TB_File3 = new System.Windows.Forms.TextBox();
             this.tab_Main.SuspendLayout();
             this.Tab_BV.SuspendLayout();
             this.Tab_SAV.SuspendLayout();
@@ -277,6 +279,16 @@
             this.GB_Filter.TabIndex = 31;
             this.GB_Filter.TabStop = false;
             this.GB_Filter.Text = "Filtering";
+            // 
+            // CHK_Egg
+            // 
+            this.CHK_Egg.AutoSize = true;
+            this.CHK_Egg.Location = new System.Drawing.Point(60, 16);
+            this.CHK_Egg.Name = "CHK_Egg";
+            this.CHK_Egg.Size = new System.Drawing.Size(72, 17);
+            this.CHK_Egg.TabIndex = 21;
+            this.CHK_Egg.Text = "Eggs only";
+            this.CHK_Egg.UseVisualStyleBackColor = true;
             // 
             // CHK_IV_Spe
             // 
@@ -761,6 +773,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.TB_File3);
+            this.groupBox1.Controls.Add(this.B_File3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.B_BreakFolder);
             this.groupBox1.Controls.Add(this.TB_Folder);
@@ -772,9 +786,9 @@
             this.groupBox1.Controls.Add(this.B_File1);
             this.groupBox1.Controls.Add(this.TB_File2);
             this.groupBox1.Controls.Add(this.TB_File1);
-            this.groupBox1.Location = new System.Drawing.Point(1, 267);
+            this.groupBox1.Location = new System.Drawing.Point(1, 238);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(320, 154);
+            this.groupBox1.Size = new System.Drawing.Size(320, 183);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Breaker";
@@ -782,7 +796,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 105);
+            this.label2.Location = new System.Drawing.Point(10, 133);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(217, 13);
             this.label2.TabIndex = 32;
@@ -792,7 +806,7 @@
             // 
             this.B_BreakFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.B_BreakFolder.Enabled = false;
-            this.B_BreakFolder.Location = new System.Drawing.Point(239, 100);
+            this.B_BreakFolder.Location = new System.Drawing.Point(239, 128);
             this.B_BreakFolder.Name = "B_BreakFolder";
             this.B_BreakFolder.Size = new System.Drawing.Size(75, 23);
             this.B_BreakFolder.TabIndex = 31;
@@ -804,7 +818,7 @@
             // 
             this.TB_Folder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TB_Folder.Location = new System.Drawing.Point(85, 130);
+            this.TB_Folder.Location = new System.Drawing.Point(85, 158);
             this.TB_Folder.Name = "TB_Folder";
             this.TB_Folder.ReadOnly = true;
             this.TB_Folder.Size = new System.Drawing.Size(229, 20);
@@ -812,7 +826,7 @@
             // 
             // B_Folder
             // 
-            this.B_Folder.Location = new System.Drawing.Point(5, 129);
+            this.B_Folder.Location = new System.Drawing.Point(5, 157);
             this.B_Folder.Name = "B_Folder";
             this.B_Folder.Size = new System.Drawing.Size(75, 23);
             this.B_Folder.TabIndex = 29;
@@ -823,20 +837,20 @@
             // L_instrSAV
             // 
             this.L_instrSAV.AutoSize = true;
-            this.L_instrSAV.Location = new System.Drawing.Point(22, 27);
+            this.L_instrSAV.Location = new System.Drawing.Point(9, 27);
             this.L_instrSAV.Name = "L_instrSAV";
-            this.L_instrSAV.Size = new System.Drawing.Size(158, 13);
+            this.L_instrSAV.Size = new System.Drawing.Size(229, 13);
             this.L_instrSAV.TabIndex = 22;
-            this.L_instrSAV.Text = "SAV: File 1 = \"26\", File 2 = \"16\"";
+            this.L_instrSAV.Text = "SAV: File 1 = \"26\", File 2 = \"16\", File 3 = \"165\"";
             // 
             // L_instrBV
             // 
             this.L_instrBV.AutoSize = true;
-            this.L_instrBV.Location = new System.Drawing.Point(29, 14);
+            this.L_instrBV.Location = new System.Drawing.Point(17, 14);
             this.L_instrBV.Name = "L_instrBV";
-            this.L_instrBV.Size = new System.Drawing.Size(148, 13);
+            this.L_instrBV.Size = new System.Drawing.Size(217, 13);
             this.L_instrBV.TabIndex = 21;
-            this.L_instrBV.Text = "BV: File 1 = \"-1\",  File 2 = \"-2\"";
+            this.L_instrBV.Text = "BV: File 1 = \"-1\",  File 2 = \"-2\", File 3 = None";
             // 
             // B_Break
             // 
@@ -936,7 +950,7 @@
             this.RTB_OPTIONS.Location = new System.Drawing.Point(0, 100);
             this.RTB_OPTIONS.Name = "RTB_OPTIONS";
             this.RTB_OPTIONS.ReadOnly = true;
-            this.RTB_OPTIONS.Size = new System.Drawing.Size(320, 166);
+            this.RTB_OPTIONS.Size = new System.Drawing.Size(320, 137);
             this.RTB_OPTIONS.TabIndex = 29;
             this.RTB_OPTIONS.Text = "";
             this.RTB_OPTIONS.ReadOnlyChanged += new System.EventHandler(this.changeReadOnly);
@@ -977,15 +991,25 @@
             this.CB_Game.TabIndex = 2;
             this.CB_Game.SelectedIndexChanged += new System.EventHandler(this.changedetectgame);
             // 
-            // CHK_Egg
+            // B_File3
             // 
-            this.CHK_Egg.AutoSize = true;
-            this.CHK_Egg.Location = new System.Drawing.Point(60, 16);
-            this.CHK_Egg.Name = "CHK_Egg";
-            this.CHK_Egg.Size = new System.Drawing.Size(72, 17);
-            this.CHK_Egg.TabIndex = 21;
-            this.CHK_Egg.Text = "Eggs only";
-            this.CHK_Egg.UseVisualStyleBackColor = true;
+            this.B_File3.Location = new System.Drawing.Point(5, 100);
+            this.B_File3.Name = "B_File3";
+            this.B_File3.Size = new System.Drawing.Size(75, 23);
+            this.B_File3.TabIndex = 33;
+            this.B_File3.Text = "File 3";
+            this.B_File3.UseVisualStyleBackColor = true;
+            this.B_File3.Click += new System.EventHandler(this.loadBreak3);
+            // 
+            // TB_File3
+            // 
+            this.TB_File3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TB_File3.Location = new System.Drawing.Point(85, 101);
+            this.TB_File3.Name = "TB_File3";
+            this.TB_File3.ReadOnly = true;
+            this.TB_File3.Size = new System.Drawing.Size(229, 20);
+            this.TB_File3.TabIndex = 34;
             // 
             // Form1
             // 
@@ -1089,6 +1113,8 @@
         private System.Windows.Forms.CheckBox CHK_IV_Atk;
         private System.Windows.Forms.CheckBox CHK_IV_HP;
         private System.Windows.Forms.CheckBox CHK_Egg;
+        private System.Windows.Forms.TextBox TB_File3;
+        private System.Windows.Forms.Button B_File3;
 
     }
 }

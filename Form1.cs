@@ -78,9 +78,9 @@ namespace KeySAV2
         public bool pathfound = false;
         public System.Timers.Timer myTimer = new System.Timers.Timer();
         public static string path_exe = System.Windows.Forms.Application.StartupPath;
-        public static string datapath = path_exe + "\\data";
-        public static string dbpath = path_exe + "\\db";
-        public static string bakpath = path_exe + "\\backup";
+        public static string datapath = path_exe + Path.DirectorySeparatorChar + "data";
+        public static string dbpath = path_exe + Path.DirectorySeparatorChar + "db";
+        public static string bakpath = path_exe + Path.DirectorySeparatorChar + "backup";
         public string path_3DS = "";
         public string path_POW = "";
 
@@ -151,11 +151,11 @@ namespace KeySAV2
                     Directory.CreateDirectory(bakpath);
             
                 // Load .ini data.
-                if (!File.Exists(datapath + "\\config.ini"))
-                    File.Create(datapath + "\\config.ini");
+                if (!File.Exists(Path.Combine(datapath, "config.ini")))
+                    File.Create(Path.Combine(datapath, "config.ini"));
                 else
                 {
-                    TextReader tr = new StreamReader(datapath + "\\config.ini");
+                    TextReader tr = new StreamReader(Path.Combine(datapath, "config.ini"));
                     try
                     {
                         // Load the data
@@ -196,11 +196,11 @@ namespace KeySAV2
                     Directory.CreateDirectory(datapath);
             
                 // Load .ini data.
-                if (!File.Exists(datapath + "\\config.ini"))
-                    File.Create(datapath + "\\config.ini");
+                if (!File.Exists(Path.Combine(datapath, "config.ini")))
+                    File.Create(Path.Combine(datapath, "config.ini"));
                 else
                 {
-                    TextWriter tr = new StreamWriter(datapath + "\\config.ini");
+                    TextWriter tr = new StreamWriter(Path.Combine(datapath, "config.ini"));
                     try
                     {
                         // Load the data
@@ -725,7 +725,7 @@ namespace KeySAV2
         private void dumpPKX_SAV(byte[] pkx, int dumpnum, int dumpstart)
         {
             if (ghost && CHK_HideFirst.Checked) return;
-            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\r\n");
+            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\n");
                 return;
 
             Structures.PKX data = new Structures.PKX(pkx);
@@ -837,7 +837,7 @@ namespace KeySAV2
 
                 if (CB_ExportStyle.SelectedIndex == 6)
                 {
-                    csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
+                    csvdata += String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\n",
                         box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
                 }
                 if (CB_ExportStyle.SelectedIndex == 7)
@@ -852,7 +852,7 @@ namespace KeySAV2
                         data.species.ToString("000") + isshiny + " - "
                         + data.nicknamestr + " - "
                         + data.chk.ToString("X4") + data.EC.ToString("X8");
-                    File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
+                    File.WriteAllBytes(Path.Combine(dbpath, CleanFileName(savedname) + ".pk6"), pkx);
                 }
                 if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
                 {
@@ -863,13 +863,13 @@ namespace KeySAV2
 
                 if (ghost && CHK_MarkFirst.Checked) result = "~" + result;
                 dumpedcounter++;
-                RTB_SAV.AppendText(result + "\r\n");
+                RTB_SAV.AppendText(result + "\n");
             }
         }
         private void DumpSAV(object sender, EventArgs e)
         {
             csvheader = "Box,Row,Column,Species,Gender,Nature,Ability,HP IV,ATK IV,DEF IV,SPA IV,SPD IV,SPE IV,HP Type,ESV,TSV,Nickname,OT,Ball,TID,SID,HP EV,ATK EV,DEF EV,SPA EV,SPD EV,SPE EV,Move 1,Move 2,Move 3,Move 4,Relearn 1, Relearn 2, Relearn 3, Relearn 4, Shiny, Egg";
-            csvdata = csvheader + "\r\n";
+            csvdata = csvheader + "\n";
             RTB_SAV.Clear();
             dumpedcounter = 0;
             // Load our Keystream file.
@@ -917,7 +917,7 @@ namespace KeySAV2
             if (CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked))
             {
                 int args = Regex.Split(RTB_OPTIONS.Text, "{").Length;
-                header += "\r\n|";
+                header += "\n|";
                 for (int i = 0; i < args; i++)
                     header += ":---:|";
 
@@ -931,8 +931,8 @@ namespace KeySAV2
                         else RTB_SAV.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                     }
                     // Append Box Name then Header
-                    RTB_SAV.AppendText("B" + (boxstart).ToString("00") + "+\r\n\r\n");
-                    RTB_SAV.AppendText(header + "\r\n");
+                    RTB_SAV.AppendText("B" + (boxstart).ToString("00") + "+\n\n");
+                    RTB_SAV.AppendText(header + "\n");
                 } 
             }
 
@@ -940,7 +940,7 @@ namespace KeySAV2
             {
                 if (i % 30 == 0 && CHK_Split.Checked)
                 {
-                    RTB_SAV.AppendText("\r\n");
+                    RTB_SAV.AppendText("\n");
                     // Add box header
                     if ((CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || ((CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6)) && CHK_R_Table.Checked))
                     {
@@ -953,8 +953,8 @@ namespace KeySAV2
                         }
                     }
                     // Append Box Name then Header
-                    RTB_SAV.AppendText("B" + (i / 30 + boxstart).ToString("00") + "\r\n\r\n");
-                    RTB_SAV.AppendText(header + "\r\n");
+                    RTB_SAV.AppendText("B" + (i / 30 + boxstart).ToString("00") + "\n\n");
+                    RTB_SAV.AppendText(header + "\n");
                 }
                 byte[] pkx = fetchpkx(savefile, keystream, boxoffset + i * 232, 0x100 + offset + i * 232, 0x40000 + offset + i * 232, empty);
                 dumpPKX_SAV(pkx, i, boxstart);
@@ -963,7 +963,7 @@ namespace KeySAV2
             // Copy Results to Clipboard
             try { Clipboard.SetText(RTB_SAV.Text); }
             catch { };
-            RTB_SAV.AppendText("\r\nData copied to clipboard!\r\nDumped: " + dumpedcounter);
+            RTB_SAV.AppendText("\nData copied to clipboard!\nDumped: " + dumpedcounter);
             RTB_SAV.Select(RTB_SAV.Text.Length - 1, 0);
             RTB_SAV.ScrollToCaret();
 
@@ -979,7 +979,7 @@ namespace KeySAV2
         // BV
         private void dumpPKX_BV(byte[] pkx, int slot)
         {
-            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\r\n");
+            if (pkx == null || !verifyCHK(pkx)) //RTB_SAV.AppendText("SLOT LOCKED\n");
                 return;
 
             Structures.PKX data = new Structures.PKX(pkx);
@@ -1046,7 +1046,7 @@ namespace KeySAV2
 
             if (CB_ExportStyle.SelectedIndex == 6)
             {
-                csvdata += String.Format("{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\r\n",
+                csvdata += String.Format("{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35}\n",
                     box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
             }
             if (CB_ExportStyle.SelectedIndex == 7)
@@ -1060,7 +1060,7 @@ namespace KeySAV2
                     data.species.ToString("000") + isshiny + " - "
                     + data.nicknamestr + " - "
                     + data.chk.ToString("X4") + data.EC.ToString("X8");
-                File.WriteAllBytes(dbpath + "\\" + CleanFileName(savedname) + ".pk6", pkx);
+                File.WriteAllBytes(Path.Combine(dbpath, CleanFileName(savedname) + ".pk6"), pkx);
             }
             if (!(CB_ExportStyle.SelectedIndex == 1 || CB_ExportStyle.SelectedIndex == 2 || (CB_ExportStyle.SelectedIndex != 0 && CB_ExportStyle.SelectedIndex < 6 && CHK_R_Table.Checked)))
             {
@@ -1069,12 +1069,12 @@ namespace KeySAV2
             }
             string result = String.Format(format, box, slot, species, gender, nature, ability, hp, atk, def, spa, spd, spe, hptype, ESV, TSV, nickname, otname, ball, TID, SID, ev_hp, ev_at, ev_de, ev_sa, ev_sd, ev_se, move1, move2, move3, move4, relearn1, relearn2, relearn3, relearn4, isshiny, isegg);
 
-            RTB_VID.AppendText(result + "\r\n");
+            RTB_VID.AppendText(result + "\n");
         } // BV
         private void dumpBV(object sender, EventArgs e)
         {
             csvheader = "Position,Species,Gender,Nature,Ability,HP IV,ATK IV,DEF IV,SPA IV,SPD IV,SPE IV,HP Type,ESV,TSV,Nickname,OT,Ball,TID,SID,HP EV,ATK EV,DEF EV,SPA EV,SPD EV,SPE EV,Move 1,Move 2,Move 3,Move 4,Relearn 1, Relearn 2, Relearn 3, Relearn 4, Shiny, Egg";
-            csvdata = csvheader + "\r\n";
+            csvdata = csvheader + "\n";
             RTB_VID.Clear();
             // player @ 0xX100, opponent @ 0x1800;
             byte[] keystream = File.ReadAllBytes(vidkeypath);
@@ -1104,14 +1104,14 @@ namespace KeySAV2
                     }
                     else RTB_VID.AppendText(boxcolors[CB_BoxColor.SelectedIndex - 1]);
                 }
-                RTB_VID.AppendText(CB_Team.Text + "\r\n\r\n");
+                RTB_VID.AppendText(CB_Team.Text + "\n\n");
                 
                 int args = Regex.Split(RTB_OPTIONS.Text, "{").Length;
-                header += "\r\n|";
+                header += "\n|";
                 for (int i = 0; i < args; i++)
                     header += ":---:|";
 
-                RTB_VID.AppendText(header + "\r\n");
+                RTB_VID.AppendText(header + "\n");
             }
 
 
@@ -1130,7 +1130,7 @@ namespace KeySAV2
             // Copy Results to Clipboard
             try { Clipboard.SetText(RTB_VID.Text); }
             catch { };
-            RTB_VID.AppendText("\r\nData copied to clipboard!"); 
+            RTB_VID.AppendText("\nData copied to clipboard!"); 
             
             RTB_VID.Select(RTB_VID.Text.Length - 1, 0);
             RTB_VID.ScrollToCaret(); 
@@ -1356,7 +1356,7 @@ namespace KeySAV2
                 ushort sid = BitConverter.ToUInt16(pkx, 0xE);
                 ushort tsv = (ushort)((tid ^ sid) >> 4);
                 // Finished, allow dumping of breakstream
-                MessageBox.Show(String.Format("Success!\r\nYour first Pokemon's TSV: {0}\r\nOT: {1}\r\n\r\nPlease save your keystream.", tsv.ToString("0000"),ot));
+                MessageBox.Show(String.Format("Success!\nYour first Pokemon's TSV: {0}\nOT: {1}\n\nPlease save your keystream.", tsv.ToString("0000"),ot));
 
 
                 FileInfo fi = new FileInfo(TB_File1.Text);
@@ -1364,7 +1364,7 @@ namespace KeySAV2
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.FileName = CleanFileName(String.Format("BV Key - {0}.bin", bvnumber));
                 string ID = sfd.InitialDirectory;
-                sfd.InitialDirectory = path_exe + "\\data";
+                sfd.InitialDirectory = Path.Combine(path_exe, "data");
                 sfd.RestoreDirectory = true;
                 sfd.Filter = "Video Key|*.bin";
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -1430,7 +1430,7 @@ namespace KeySAV2
             if ((offset[0] == 0) || (offset[1] == 0))
             {
                 // We have a problem. Don't continue.
-                result = "Unable to Find Box.\r\n";
+                result = "Unable to Find Box.\n";
             }
             else
             {
@@ -1523,7 +1523,7 @@ namespace KeySAV2
             #endregion
 
                 if (valid == 0) // We didn't get any valid EC's where D was not in last. Tell the user to try again with different specimens.
-                    result = "The 6 supplied Pokemon are not suitable. \r\nRip new saves with 6 different ones that originated from your save file.\r\n";
+                    result = "The 6 supplied Pokemon are not suitable. \nRip new saves with 6 different ones that originated from your save file.\n";
 
                 else
                 {
@@ -1693,7 +1693,7 @@ namespace KeySAV2
                 // Save file diff is done, now we're essentially done. Save the keystream.
 
                 // Success
-                result = "Keystreams were successfully bruteforced!\r\n\r\n";
+                result = "Keystreams were successfully bruteforced!\n\n";
                 result += "Save your keystream now...";
                 MessageBox.Show(result);
 
@@ -1704,7 +1704,7 @@ namespace KeySAV2
                 ushort tsv = (ushort)((tid ^ sid) >> 4);
                 SaveFileDialog sfd = new SaveFileDialog();
                 string ID = sfd.InitialDirectory;
-                sfd.InitialDirectory = path_exe + "\\data";
+                sfd.InitialDirectory = Path.Combine(path_exe, "data");
                 sfd.RestoreDirectory = true;
                 sfd.FileName = CleanFileName(String.Format("SAV Key - {0} - ({1}.{2}) - TSV {3}.bin", ot, tid.ToString("00000"), sid.ToString("00000"), tsv.ToString("0000")));
                 sfd.Filter = "Save Key|*.bin";
@@ -1716,7 +1716,7 @@ namespace KeySAV2
                 sfd.InitialDirectory = ID; sfd.RestoreDirectory = true;
             }
             else // Failed
-                MessageBox.Show(result + "Keystreams were NOT bruteforced!\r\n\r\nStart over and try again :(");
+                MessageBox.Show(result + "Keystreams were NOT bruteforced!\n\nStart over and try again :(");
         }
 
         // Utility
@@ -1762,32 +1762,32 @@ namespace KeySAV2
                 if (game == 0)
                 {
                     // X
-                    savpath = path_3DS + "\\title\\00040000\\00055d00\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\0000055d\\00000000\\";
+                    savpath = Path.Combine(path_3DS, "title", "00040000", "00055d00"); 
+                    vidpath = Path.Combine(path_3DS, "extdata", "00000000", "0000055d", "00000000"); 
                 }
                 else if (game == 1)
                 {
                     // Y
-                    savpath = path_3DS + "\\title\\00040000\\00055e00\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\0000055e\\00000000\\";
+                    savpath = Path.Combine(path_3DS, "title", "00040000", "00055e00"); 
+                    vidpath = Path.Combine(path_3DS, "extdata", "00000000", "0000055e", "00000000"); 
                 }
                 else if (game == 2) 
                 {
                     // OR
-                    savpath = path_3DS + "\\title\\00040000\\0011c400\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\000011c4\\00000000\\";
+                    savpath = Path.Combine(path_3DS, "title", "00040000", "0011c400");
+                    vidpath = Path.Combine(path_3DS, "extdata", "00000000", "000011c4", "00000000");
                 }
                 else if (game == 3)
                 {
                     // AS
-                    savpath = path_3DS + "\\title\\00040000\\0011c500\\";
-                    vidpath = path_3DS + "\\extdata\\00000000\\000011c5\\00000000\\";
+                    savpath = Path.Combine(path_3DS, "title", "00040000", "0011c500");
+                    vidpath = Path.Combine(path_3DS, "extdata", "00000000", "000011c5", "00000000");
                 }
 
                 if (Directory.Exists(savpath))
                 {
-                    if (File.Exists(savpath + "00000001.sav"))
-                        this.Invoke(new MethodInvoker(delegate { openSAV(savpath + "00000001.sav"); }));
+                    if (File.Exists(Path.Combine(savpath,"00000001.sav")))
+                        this.Invoke(new MethodInvoker(delegate { openSAV(Path.Combine(savpath, "00000001.sav")); }));
                 }
                 // Fetch the latest video
                 if (Directory.Exists(vidpath))
@@ -1855,42 +1855,42 @@ namespace KeySAV2
         private void B_ShowOptions_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
-                 "{0} - Box\r\n"
-                +"{1} - Slot\r\n"
-                +"{2} - Species\r\n"
-                +"{3} - Gender\r\n"
-                +"{4} - Nature\r\n"
-                +"{5} - Ability\r\n"
-                +"{6} - HP IV\r\n"
-                +"{7} - ATK IV\r\n"
-                +"{8} - DEF IV\r\n"
-                +"{9} - SPA IV\r\n"
-                +"{10} - SPE IV\r\n"
-                +"{11} - SPD IV\r\n"
-                +"{12} - Hidden Power Type\r\n"
-                +"{13} - ESV\r\n"
-                +"{14} - TSV\r\n"
-                +"{15} - Nickname\r\n"
-                +"{16} - OT Name\r\n"
-                +"{17} - Ball\r\n"
-                +"{18} - TID\r\n"
-                +"{19} - SID\r\n"
-                +"{20} - HP EV\r\n"
-                +"{21} - ATK EV\r\n"
-                +"{22} - DEF EV\r\n"
-                +"{23} - SPA EV\r\n"
-                +"{24} - SPD EV\r\n"
-                +"{25} - SPE EV\r\n"
-                +"{26} - Move 1\r\n"
-                +"{27} - Move 2\r\n"
-                +"{28} - Move 3\r\n"
-                +"{29} - Move 4\r\n"
-                +"{30} - Relearn 1\r\n"
-                +"{31} - Relearn 2\r\n"
-                +"{32} - Relearn 3\r\n"
-                +"{33} - Relearn 4\r\n"
-                +"{34} - Is Shiny\r\n"
-                +"{35} - Is Egg\r\n"
+                 "{0} - Box\n"
+                +"{1} - Slot\n"
+                +"{2} - Species\n"
+                +"{3} - Gender\n"
+                +"{4} - Nature\n"
+                +"{5} - Ability\n"
+                +"{6} - HP IV\n"
+                +"{7} - ATK IV\n"
+                +"{8} - DEF IV\n"
+                +"{9} - SPA IV\n"
+                +"{10} - SPE IV\n"
+                +"{11} - SPD IV\n"
+                +"{12} - Hidden Power Type\n"
+                +"{13} - ESV\n"
+                +"{14} - TSV\n"
+                +"{15} - Nickname\n"
+                +"{16} - OT Name\n"
+                +"{17} - Ball\n"
+                +"{18} - TID\n"
+                +"{19} - SID\n"
+                +"{20} - HP EV\n"
+                +"{21} - ATK EV\n"
+                +"{22} - DEF EV\n"
+                +"{23} - SPA EV\n"
+                +"{24} - SPD EV\n"
+                +"{25} - SPE EV\n"
+                +"{26} - Move 1\n"
+                +"{27} - Move 2\n"
+                +"{28} - Move 3\n"
+                +"{29} - Move 4\n"
+                +"{30} - Relearn 1\n"
+                +"{31} - Relearn 2\n"
+                +"{32} - Relearn 3\n"
+                +"{33} - Relearn 4\n"
+                +"{34} - Is Shiny\n"
+                +"{35} - Is Egg\n"
                 ,"Help"
                 );
         }
@@ -2200,10 +2200,10 @@ namespace KeySAV2
             int second = dt.Second;
 
             string bkpdate = year.ToString("0000") + month.ToString("00") + day.ToString("00") + hour.ToString("00") + minute.ToString("00") + second.ToString("00") + " ";
-            string newpath = bakpath + "\\" + bkpdate + fi.Name;
+            string newpath = bakpath + Path.DirectorySeparatorChar + bkpdate + fi.Name;
             if (File.Exists(newpath))
             {
-                DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
+                DialogResult sdr = MessageBox.Show("File already exists!\n\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
                 if (sdr == DialogResult.Yes)
                     File.Delete(newpath);
                 else 
@@ -2211,7 +2211,7 @@ namespace KeySAV2
             }
 
             File.Copy(tb.Text, newpath);
-            MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
+            MessageBox.Show("Copied to Backup Folder.\n\nFile named:\n" + newpath, "Alert");
         }
         private void B_BKP_BV_Click(object sender, EventArgs e)
         {
@@ -2227,10 +2227,10 @@ namespace KeySAV2
             int second = dt.Second;
 
             string bkpdate = year.ToString("0000") + month.ToString("00") + day.ToString("00") + hour.ToString("00") + minute.ToString("00") + second.ToString("00") + " ";
-            string newpath = bakpath + "\\" + bkpdate + fi.Name;
+            string newpath = bakpath + Path.DirectorySeparatorChar + bkpdate + fi.Name;
             if (File.Exists(newpath))
             {
-                DialogResult sdr = MessageBox.Show("File already exists!\r\n\r\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
+                DialogResult sdr = MessageBox.Show("File already exists!\n\nOverwrite?", "Prompt", MessageBoxButtons.YesNo);
                 if (sdr == DialogResult.Yes)
                     File.Delete(newpath);
                 else 
@@ -2238,7 +2238,7 @@ namespace KeySAV2
             }
 
             File.Copy(tb.Text, newpath);
-            MessageBox.Show("Copied to Backup Folder.\r\n\r\nFile named:\r\n" + newpath, "Alert");
+            MessageBox.Show("Copied to Backup Folder.\n\nFile named:\n" + newpath, "Alert");
         }
 
         private void B_BreakFolder_Click(object sender, EventArgs e)

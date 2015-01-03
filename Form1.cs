@@ -382,7 +382,7 @@ namespace KeySAV2
         {
             // check to see if good input file
             long len = new FileInfo(path).Length;
-            if (len != 0x100000 || len != 0x10009C || len != 0x10019A)
+            if (len != 0x100000 && len != 0x10009C &&    len != 0x10019A)
             { 
                 if(showUI) MessageBox.Show("Incorrect File Size");
                 return;

@@ -382,7 +382,7 @@ namespace KeySAV2
         {
             // check to see if good input file
             long len = new FileInfo(path).Length;
-            if (len != 0x100000 && len != 0x10009C &&    len != 0x10019A)
+            if (len != 0x100000 && len != 0x10009C && len != 0x10019A)
             { 
                 if(showUI) MessageBox.Show("Incorrect File Size");
                 return;
@@ -1169,7 +1169,7 @@ namespace KeySAV2
             {
                 string path = boxsave.FileName;
                 byte[] input = File.ReadAllBytes(path);
-                if ((input.Length == 0x100000) || input.Length == 0x100009C || input.Length == 0x10019A)
+                if ((input.Length == 0x100000) || input.Length == 0x10009C || input.Length == 0x10019A)
                 {
                     Array.Copy(input, input.Length % 0x100000, break1, 0, 0x100000);
                     TB_File1.Text = path;
